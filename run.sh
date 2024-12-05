@@ -15,8 +15,8 @@ cp ckb_v0.117.0_aarch64-apple-darwin-portable/ckb-cli tmp
 cd tmp
 
 # 节点范围定义
-start_node=1
-end_node=8
+start_node_id=1
+end_node_id=8
 
 # 检查是否已存在 announce_private_addr
 if ! yq eval '.fiber.announce_private_addr' "../config/testnet/config.yml" | grep -q true; then
@@ -25,14 +25,14 @@ fi
 yq eval '.fiber.announce_private_addr' "../config/testnet/config.yml"
 
 # 创建目录、复制配置文件并设置密钥
-for ((node = $start_node; id <= $end_node; node++)); do
+for ((id = $start_node_id; id <= $end_node_id; id++)); do
   mkdir -p "testnet-fnn/node$id/ckb"
   cp "../config/testnet/config.yml" "testnet-fnn/node$id/config.yml"
   sed -n "${id}p" "../../keys.txt" >"testnet-fnn/node$id/ckb/key"
 done
 
 # 更新配置并打印配置情况
-for ((node = $start_node + 1; node <= $end_node; node++)); do
+for ((id = $start_node_id + 1; node <= $end_node_id; id++)); do
   # 计算端口号
   fiber_port=$((8225 + 2 * node))
   rpc_port=$((8225 + 2 * node + 1))
@@ -49,6 +49,6 @@ for ((node = $start_node + 1; node <= $end_node; node++)); do
 done
 
 # 启动节点
-for ((node = $start_node; id <= $end_node; node++)); do
+for ((id = $start_node_id; id <= $end_node_id; id++)); do
   RUST_LOG=info ./fnn -c "testnet-fnn/node$id/config.yml" -d "testnet-fnn/node$id" >"./node$id.log" 2>&1 &
 done
