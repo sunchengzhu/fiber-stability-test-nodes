@@ -25,10 +25,10 @@ fi
 yq eval '.fiber.announce_private_addr' "../config/testnet/config.yml"
 
 # 创建目录、复制配置文件并设置密钥
-for ((node = $start_node; node <= $end_node; node++)); do
-  mkdir -p "testnet-fnn/node$node/ckb"
-  cp "../config/testnet/config.yml" "testnet-fnn/node$node/config.yml"
-  sed -n "${node}p" "../../keys.txt" >"testnet-fnn/node$node/ckb/key"
+for ((node = $start_node; id <= $end_node; node++)); do
+  mkdir -p "testnet-fnn/node$id/ckb"
+  cp "../config/testnet/config.yml" "testnet-fnn/node$id/config.yml"
+  sed -n "${id}p" "../../keys.txt" >"testnet-fnn/node$id/ckb/key"
 done
 
 # 更新配置并打印配置情况
@@ -38,17 +38,17 @@ for ((node = $start_node + 1; node <= $end_node; node++)); do
   rpc_port=$((8225 + 2 * node + 1))
 
   # 更新配置
-  yq eval ".fiber.listening_addr = \"/ip4/127.0.0.1/tcp/$fiber_port\"" -i "testnet-fnn/node$node/config.yml"
-  yq eval ".rpc.listening_addr = \"127.0.0.1:$rpc_port\"" -i "testnet-fnn/node$node/config.yml"
+  yq eval ".fiber.listening_addr = \"/ip4/127.0.0.1/tcp/$fiber_port\"" -i "testnet-fnn/node$id/config.yml"
+  yq eval ".rpc.listening_addr = \"127.0.0.1:$rpc_port\"" -i "testnet-fnn/node$id/config.yml"
 
   # 打印配置情况
-  echo "node$node config.yml"
-  yq eval '.fiber.listening_addr' "testnet-fnn/node$node/config.yml"
-  yq eval '.rpc.listening_addr' "testnet-fnn/node$node/config.yml"
+  echo "node$id config.yml"
+  yq eval '.fiber.listening_addr' "testnet-fnn/node$id/config.yml"
+  yq eval '.rpc.listening_addr' "testnet-fnn/node$id/config.yml"
   echo ""
 done
 
 # 启动节点
-for ((node = $start_node; node <= $end_node; node++)); do
-  RUST_LOG=info ./fnn -c "testnet-fnn/node$node/config.yml" -d "testnet-fnn/node$node" >>"./node$node.log" 2>&1 &
+for ((node = $start_node; id <= $end_node; node++)); do
+  RUST_LOG=info ./fnn -c "testnet-fnn/node$id/config.yml" -d "testnet-fnn/node$id" >"./node$id.log" 2>&1 &
 done
