@@ -24,23 +24,23 @@ if ! yq eval '.fiber.announce_private_addr' "../config/testnet/config.yml" | gre
 fi
 yq eval '.fiber.announce_private_addr' "../config/testnet/config.yml"
 
-# 创建目录、复制配置文件并设置密钥
+# 创建目录、复制配置文件并设置密钥，同时更新配置并打印配置情况
 for ((id = $start_node_id; id <= $end_node_id; id++)); do
+  # 创建目录并复制配置文件
   mkdir -p "testnet-fnn/node$id/ckb"
   cp "../config/testnet/config.yml" "testnet-fnn/node$id/config.yml"
   sed -n "${id}p" "../../keys.txt" >"testnet-fnn/node$id/ckb/key"
-done
 
-# 更新配置并打印配置情况
-for ((id = $start_node_id + 1; node <= $end_node_id; id++)); do
-  # 计算端口号
-  fiber_port=$((8225 + 2 * node))
-  rpc_port=$((8225 + 2 * node + 1))
+  # 对于 id 大于 1 的节点，更新配置文件中的端口
+  if [ $id -gt 1 ]; then
+    # 计算端口号
+    fiber_port=$((8227 + 2 * (id - 1)))
+    rpc_port=$((8227 + 2 * (id - 1) + 1))
 
-  # 更新配置
-  yq eval ".fiber.listening_addr = \"/ip4/127.0.0.1/tcp/$fiber_port\"" -i "testnet-fnn/node$id/config.yml"
-  yq eval ".rpc.listening_addr = \"127.0.0.1:$rpc_port\"" -i "testnet-fnn/node$id/config.yml"
-
+    # 更新配置文件中的端口
+    yq eval ".fiber.listening_addr = \"/ip4/127.0.0.1/tcp/$fiber_port\"" -i "testnet-fnn/node$id/config.yml"
+    yq eval ".rpc.listening_addr = \"127.0.0.1:$rpc_port\"" -i "testnet-fnn/node$id/config.yml"
+  fi
   # 打印配置情况
   echo "node$id config.yml"
   yq eval '.fiber.listening_addr' "testnet-fnn/node$id/config.yml"
