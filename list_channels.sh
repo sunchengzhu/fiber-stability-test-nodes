@@ -15,6 +15,7 @@ for PORT in "${PORTS[@]}"; do
              }' "$id")")
   if [ $? -eq 0 ]; then
     peer_id=$(echo "$response" | jq -r '.result.peer_id')
+    echo "$peer_id"
     peer_ids+=("$peer_id")
   else
     echo "Query to port $PORT failed."
@@ -23,9 +24,9 @@ for PORT in "${PORTS[@]}"; do
   ((id++))
 done
 
-for peer_id in "${peer_ids[@]}"; do
-  echo "$peer_id"
-done
+#for peer_id in "${peer_ids[@]}"; do
+#  echo "$peer_id"
+#done
 
 f_peer_id="${peer_ids[5]}"
 g_peer_id="${peer_ids[6]}"
@@ -49,8 +50,8 @@ EOF
   )
 
   curl -sS --location "http://127.0.0.1:$port" --header "Content-Type: application/json" --data "$list_channels_json_data" | jq -r
-  echo ""
 done
+echo ""
 
 for i in 5 7; do
   port="${PORTS[i]}"
@@ -71,5 +72,4 @@ EOF
   )
 
   curl -sS --location "http://127.0.0.1:$port" --header "Content-Type: application/json" --data "$list_channels_json_data" | jq -r
-  echo ""
 done
