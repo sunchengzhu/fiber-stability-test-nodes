@@ -23,12 +23,15 @@ for PORT in "${PORTS[@]}"; do
   ((id++))
 done
 
-for addr in "${addresses[@]}"; do
-  echo "$addr"
-done
+#for addr in "${addresses[@]}"; do
+#  echo "$addr"
+#done
 
 f_address="${addresses[5]}"
 g_address="${addresses[6]}"
+
+echo "$f_address"
+echo "$g_address"
 
 for i in 0 1 2 3 4 6; do
   port="${PORTS[i]}"
