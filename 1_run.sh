@@ -6,12 +6,12 @@ rm -rf fiber
 git clone https://github.com/nervosnetwork/fiber.git
 cd fiber
 cargo build --release
-wget https://github.com/nervosnetwork/ckb/releases/download/v0.117.0/ckb_v0.117.0_aarch64-apple-darwin-portable.zip
-unzip ckb_v0.117.0_aarch64-apple-darwin-portable.zip
+wget https://github.com/nervosnetwork/ckb-cli/releases/download/v1.12.0/ckb-cli_v1.12.0_aarch64-apple-darwin.zip
+unzip ckb-cli_v1.12.0_aarch64-apple-darwin.zip
 mkdir tmp
 
 cp target/release/fnn tmp
-cp ckb_v0.117.0_aarch64-apple-darwin-portable/ckb-cli tmp
+cp ckb-cli_v1.12.0_aarch64-apple-darwin/ckb-cli tmp
 cd tmp
 
 # 节点范围定义
