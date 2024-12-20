@@ -52,7 +52,7 @@ EOF
   channel_id=$(curl -sS --location "http://127.0.0.1:$port" --header "Content-Type: application/json" --data "$list_channels_json_data" | jq -r '.result.channels[0].channel_id')
   echo "$channel_id"
 
-  args=$(sed -n "$((i + 1))p" args.txt)
+  args=$(sed -n "$((i + 1))p" ../args.txt)
   shutdown_channel_json_data=$(
     cat <<EOF
 {
@@ -102,7 +102,7 @@ EOF
   channel_id=$(curl -sS --location "http://127.0.0.1:$port" --header "Content-Type: application/json" --data "$list_channels_json_data" | jq -r '.result.channels[0].channel_id')
   echo "$channel_id"
 
-  args=$(sed -n "$((i + 1))p" args.txt)
+  args=$(sed -n "$((i + 1))p" ../args.txt)
   shutdown_channel_json_data=$(
     cat <<EOF
 {

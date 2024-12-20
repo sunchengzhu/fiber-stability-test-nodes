@@ -1,5 +1,6 @@
 #!/bin/bash
 
+cd ..
 pkill fnn
 rm -rf fiber
 

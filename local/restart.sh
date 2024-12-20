@@ -2,7 +2,7 @@
 
 pkill fnn
 
-cd fiber/tmp || exit
+cd ../fiber/tmp || exit
 
 start_node_id=1
 end_node_id=8
