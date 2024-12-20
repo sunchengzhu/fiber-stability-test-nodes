@@ -1,14 +1,21 @@
 #!/bin/bash
 
+MODE=1
+
 cd ..
 pkill fnn
-rm -rf fiber
 
-git clone https://github.com/nervosnetwork/fiber.git
-cd fiber
-cargo build --release
+if [ "$MODE" -eq 1 ]; then
+  rm -rf fiber
+  git clone https://github.com/nervosnetwork/fiber.git
+  cd fiber
+  cargo build --release
+else
+  cd fiber
+  rm -rf tmp
+fi
+
 mkdir tmp
-
 cp target/release/fnn tmp
 cd tmp
 
