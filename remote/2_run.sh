@@ -22,10 +22,11 @@ esac
 
 ls ../fiber/tmp/testnet-fnn
 
-for dir in $(ls -d ../fiber/tmp/testnet-fnn/node*); do
+cd ../fiber/tmp
+for dir in $(ls -d ./testnet-fnn/node*); do
   node_id=$(basename "$dir")
 
-  RUST_LOG=info ./fnn -c "$dir/config.yml" -d "$dir" >"$dir/$node_id.log" 2>&1 &
+  RUST_LOG=info ./fnn -c "$dir/config.yml" -d "$dir" >"./testnet-fnn/$node_id.log" 2>&1 &
 done
 
 ps aux | grep '[f]nn'
