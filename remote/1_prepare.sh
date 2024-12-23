@@ -34,6 +34,7 @@ for ((id = $start_node_id; id <= $end_node_id; id++)); do
   # 创建目录并复制配置文件
   mkdir -p "testnet-fnn/node$id/ckb"
   cp "../config/testnet/config.yml" "testnet-fnn/node$id/config.yml"
+  chmod 600 "testnet-fnn/node$id/config.yml"
   sed -n "${id}p" "../../keys.txt" >"testnet-fnn/node$id/ckb/key"
 
   # 计算端口号
