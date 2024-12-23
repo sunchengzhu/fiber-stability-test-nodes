@@ -78,12 +78,12 @@ elif [ "$current_ip" == "43.198.254.225" ]; then
   echo ""
 elif [ "$current_ip" == "43.199.108.57" ]; then
   port1="${PORTS[6]}"
-  json_data1=$(printf "$list_channels_f_json_data" "$port")
+  json_data1=$(printf "$list_channels_f_json_data" "$port1")
   curl -sS --location "http://$current_ip:$port1" --header "Content-Type: application/json" --data "$json_data1" | jq -r
   echo ""
 
   port2="${PORTS[7]}"
-  json_data2=$(printf "$connect_peer_g_json_data" "$port")
+  json_data2=$(printf "$connect_peer_g_json_data" "$port2")
   curl -sS --location "http://$current_ip:$port2" --header "Content-Type: application/json" --data "$json_data2" | jq -r
   echo ""
 fi
