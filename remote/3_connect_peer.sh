@@ -81,13 +81,12 @@ elif [ "$current_ip" == "43.198.254.225" ]; then
   curl --location "http://$current_ip:$port" --header "Content-Type: application/json" --data "$json_data"
   echo ""
 elif [ "$current_ip" == "43.199.108.57" ]; then
-  port="${PORTS[7]}"
-  json_data=$(printf "$connect_peer_g_json_data" "$port")
-  curl --location "http://$current_ip:$port" --header "Content-Type: application/json" --data "$json_data"
-  echo ""
-
   port="${PORTS[6]}"
   json_data=$(printf "$connect_peer_f_json_data" "$port")
+  curl --location "http://$current_ip:$port" --header "Content-Type: application/json" --data "$json_data"
+  echo ""
+  port="${PORTS[7]}"
+  json_data=$(printf "$connect_peer_g_json_data" "$port")
   curl --location "http://$current_ip:$port" --header "Content-Type: application/json" --data "$json_data"
   echo ""
 fi
