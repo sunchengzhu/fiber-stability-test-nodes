@@ -41,13 +41,14 @@ for ((id = $start_node_id; id <= $end_node_id; id++)); do
   rpc_port=$((8230 + id))
 
   # 根据 id 修改配置文件中的地址
-  if [ "$id" -ge 1 ] && [ "$id" -le 5 ]; then
-    ip="18.167.71.41"
-  elif [ "$id" -eq 6 ]; then
-    ip="43.198.254.225"
-  elif [ "$id" -ge 7 ] && [ "$id" -le 8 ]; then
-    ip="43.199.108.57"
-  fi
+#  if [ "$id" -ge 1 ] && [ "$id" -le 5 ]; then
+#    ip="18.167.71.41"
+#  elif [ "$id" -eq 6 ]; then
+#    ip="43.198.254.225"
+#  elif [ "$id" -ge 7 ] && [ "$id" -le 8 ]; then
+#    ip="43.199.108.57"
+#  fi
+  ip=0.0.0.0
 
   # 更新配置文件中的地址
   yq eval ".fiber.listening_addr = \"/ip4/$ip/tcp/$fiber_port\"" -i "testnet-fnn/node$id/config.yml"
