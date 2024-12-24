@@ -90,7 +90,9 @@ if [ "$current_ip" == "18.167.71.41" ]; then
     echo ""
     args=$(sed -n "$((i + 1))p" ../args.txt)
     shutdown_channel_json_data=$(printf "$shutdown_channel_json_template" "$port" "$channel_id" "$args")
-    curl -sS --location "http://$current_ip:$port" --header "Content-Type: application/json" --data "$shutdown_channel_json_data"
+    if [[ "$channel_id" != "null" && -n "$channel_id" ]]; then
+      curl -sS --location "http://127.0.0.1:$port" --header "Content-Type: application/json" --data "$shutdown_channel_json_data"
+    fi
   done
 elif [ "$current_ip" == "43.198.254.225" ]; then
   port="${PORTS[5]}"
