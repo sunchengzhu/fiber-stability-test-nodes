@@ -91,7 +91,7 @@ if [ "$current_ip" == "18.167.71.41" ]; then
     args=$(sed -n "$((i + 1))p" ../args.txt)
     shutdown_channel_json_data=$(printf "$shutdown_channel_json_template" "$port" "$channel_id" "$args")
     if [[ "$channel_id" != "null" && -n "$channel_id" ]]; then
-      curl -sS --location "http://127.0.0.1:$port" --header "Content-Type: application/json" --data "$shutdown_channel_json_data"
+      curl -sS --location "http://$current_ip:$port" --header "Content-Type: application/json" --data "$shutdown_channel_json_data"
     fi
   done
 elif [ "$current_ip" == "43.198.254.225" ]; then
@@ -100,15 +100,22 @@ elif [ "$current_ip" == "43.198.254.225" ]; then
   channel_id=$(curl -sS --location "http://$current_ip:$port" --header "Content-Type: application/json" --data "$json_data" | jq -r '.result.channels[0].channel_id')
   echo "$channel_id"
   echo ""
+  args=$(sed -n "$((5 + 1))p" ../args.txt)
+  shutdown_channel_json_data=$(printf "$shutdown_channel_json_template" "$port" "$channel_id" "$args")
+  if [[ "$channel_id" != "null" && -n "$channel_id" ]]; then
+    curl -sS --location "http://$current_ip:$port" --header "Content-Type: application/json" --data "$shutdown_channel_json_data"
+  fi
 elif [ "$current_ip" == "43.199.108.57" ]; then
-  port1="${PORTS[6]}"
-  json_data1=$(printf "$list_channels_f_json_data" "$port1")
-  channel_id1=$(curl -sS --location "http://$current_ip:$port1" --header "Content-Type: application/json" --data "$json_data1" | jq -r '.result.channels[0].channel_id')
-  echo "$channel_id1"
-  echo ""
-
-  port2="${PORTS[7]}"
-  json_data2=$(printf "$list_channels_g_json_data" "$port2")
-  channel_id2=$(curl -sS --location "http://$current_ip:$port2" --header "Content-Type: application/json" --data "$json_data2" | jq -r '.result.channels[0].channel_id')
-  echo "$channel_id2"
+  for i in 6 7; do
+    port="${PORTS[i]}"
+    json_data=$(printf "$list_channels_f_json_data" "$port")
+    channel_id=$(curl -sS --location "http://$current_ip:$port" --header "Content-Type: application/json" --data "$json_data" | jq -r '.result.channels[0].channel_id')
+    echo "$channel_id"
+    echo ""
+    args=$(sed -n "$((i + 1))p" ../args.txt)
+    shutdown_channel_json_data=$(printf "$shutdown_channel_json_template" "$port" "$channel_id" "$args")
+    if [[ "$channel_id" != "null" && -n "$channel_id" ]]; then
+      curl -sS --location "http://$current_ip:$port" --header "Content-Type: application/json" --data "$shutdown_channel_json_data"
+    fi
+  done
 fi
