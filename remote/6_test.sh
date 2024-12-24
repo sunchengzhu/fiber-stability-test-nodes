@@ -1,37 +1,23 @@
 #!/bin/bash
 
-PORTS=($(seq 8231 8238))
+PORTS=8236
 peer_ids=()
 
-for idx in "${!PORTS[@]}"; do
-  PORT=${PORTS[idx]}
-  if [ "$idx" -lt 5 ]; then
-    ip="18.167.71.41"
-  elif [ "$idx" -eq 5 ]; then
-    ip="43.198.254.225"
-  elif [ "$idx" -ge 6 ]; then
-    ip="43.199.108.57"
-  fi
+ip="43.198.254.225"
 
-  response=$(curl -s -X POST http://"$ip":"$PORT" \
+response=$(curl -s -X POST "http://$ip:$PORT" \
     -H "Content-Type: application/json" \
-    -d "$(printf '{
-                 "id": %d,
-                 "jsonrpc": "2.0",
-                 "method": "node_info",
-                 "params": []
-             }' "$id")")
-  if [ $? -eq 0 ]; then
-    peer_id=$(echo "$response" | jq -r '.result.peer_id' | sed "s/0.0.0.0/$ip/")
-    peer_ids+=("$peer_id")
-  else
-    echo "Query to port $PORT failed."
-  fi
-done
+    -d '{
+          "id": 1,
+          "jsonrpc": "2.0",
+          "method": "node_info",
+          "params": []
+        }')
 
-f_peer_id="${peer_ids[5]}"
+f_peer_id=$(echo "$response" | jq -r '.result.peer_id' | sed "s/0.0.0.0/$ip/")
 
-json_data=$(cat <<EOF
+json_data=$(
+    cat <<EOF
 {
     "id": 1,
     "jsonrpc": "2.0",
@@ -45,13 +31,14 @@ json_data=$(cat <<EOF
 EOF
 )
 
-curl --location 'http://18.167.71.41:8231' --header 'Content-Type: application/json' --data "$json_data" | jq -r
+curl -sS --location 'http://18.167.71.41:8231' --header 'Content-Type: application/json' --data "$json_data" | jq -r
 
 payment_preimage="0x$(openssl rand -hex 32)"
 
-response=$(curl --location 'http://43.199.108.57:8237' \
-  --header 'Content-Type: application/json' \
-  --data "$(cat <<EOF
+response=$(curl -sS --location 'http://43.199.108.57:8237' \
+    --header 'Content-Type: application/json' \
+    --data "$(
+        cat <<EOF
 {
     "id": 2,
     "jsonrpc": "2.0",
@@ -67,12 +54,13 @@ response=$(curl --location 'http://43.199.108.57:8237' \
     }]
 }
 EOF
-)")
+    )")
 
 echo "$response" | jq -r '.result'
 invoice_address=$(echo "$response" | jq -r '.result.invoice_address')
 
-curl --location 'http://18.167.71.41:8231' --header 'Content-Type: application/json' --data "$(cat <<EOF
+curl -sS --location 'http://18.167.71.41:8231' --header 'Content-Type: application/json' --data "$(
+    cat <<EOF
 {
     "id": 3,
     "jsonrpc": "2.0",
@@ -86,4 +74,4 @@ EOF
 
 sleep 5
 
-curl --location 'http://18.167.71.41:8231' --header 'Content-Type: application/json' --data "$json_data" | jq -r
+curl -sS --location 'http://18.167.71.41:8231' --header 'Content-Type: application/json' --data "$json_data" | jq -r
