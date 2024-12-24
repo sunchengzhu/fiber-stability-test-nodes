@@ -64,6 +64,23 @@ list_channels_g_json_data=$(
 EOF
 )
 
+shutdown_channel_json_template='{
+  "id": "%s",
+  "jsonrpc": "2.0",
+  "method": "shutdown_channel",
+  "params": [
+    {
+      "channel_id": "%s",
+      "close_script": {
+        "code_hash": "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8",
+        "hash_type": "type",
+        "args": "%s"
+      },
+      "fee_rate": "0x3FC"
+    }
+  ]
+}'
+
 if [ "$current_ip" == "18.167.71.41" ]; then
   for i in 0 1 2 3 4; do
     port="${PORTS[i]}"
@@ -71,6 +88,9 @@ if [ "$current_ip" == "18.167.71.41" ]; then
     channel_id=$(curl -sS --location "http://$current_ip:$port" --header "Content-Type: application/json" --data "$json_data" | jq -r '.result.channels[0].channel_id')
     echo "$channel_id"
     echo ""
+    args=$(sed -n "$((i + 1))p" ../args.txt)
+    shutdown_channel_json_data=$(printf "$shutdown_channel_json_template" "$port" "$channel_id" "$args")
+    curl -sS --location "http://$current_ip:$port" --header "Content-Type: application/json" --data "$shutdown_channel_json_data"
   done
 elif [ "$current_ip" == "43.198.254.225" ]; then
   port="${PORTS[5]}"
