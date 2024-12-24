@@ -13,14 +13,14 @@ for idx in "${!PORTS[@]}"; do
     ip="43.199.108.57"
   fi
 
-  response=$(curl -s -X POST http://"$ip":"$PORT" \
+  response=$(curl -s -X POST "http://$ip:$PORT" \
     -H "Content-Type: application/json" \
-    -d "$(printf '{
-                 "id": %d,
-                 "jsonrpc": "2.0",
-                 "method": "node_info",
-                 "params": []
-             }' "$id")")
+    -d '{
+          "id": 1,
+          "jsonrpc": "2.0",
+          "method": "node_info",
+          "params": []
+        }')
   if [ $? -eq 0 ]; then
     peer_id=$(echo "$response" | jq -r '.result.peer_id' | sed "s/0.0.0.0/$ip/")
     peer_ids+=("$peer_id")

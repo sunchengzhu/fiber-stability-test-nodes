@@ -29,7 +29,7 @@ json_data=$(
 EOF
 )
 
-curl -sS --location 'http://18.167.71.41:8231' --header 'Content-Type: application/json' --data "$json_data" | jq -r
+curl -sS --location 'http://18.167.71.41:8231' --header 'Content-Type: application/json' --data "$json_data" | jq '.result'
 
 payment_preimage="0x$(openssl rand -hex 32)"
 
@@ -38,7 +38,7 @@ response=$(curl -sS --location 'http://43.199.108.57:8237' \
     --data "$(
         cat <<EOF
 {
-    "id": 2,
+    "id": 1,
     "jsonrpc": "2.0",
     "method": "new_invoice",
     "params": [{
@@ -60,7 +60,7 @@ invoice_address=$(echo "$response" | jq -r '.result.invoice_address')
 curl -sS --location 'http://18.167.71.41:8231' --header 'Content-Type: application/json' --data "$(
     cat <<EOF
 {
-    "id": 3,
+    "id": 2,
     "jsonrpc": "2.0",
     "method": "send_payment",
     "params": [{
@@ -72,4 +72,4 @@ EOF
 
 sleep 5
 
-curl -sS --location 'http://18.167.71.41:8231' --header 'Content-Type: application/json' --data "$json_data" | jq -r
+curl -sS --location 'http://18.167.71.41:8231' --header 'Content-Type: application/json' --data "$json_data" | jq '.result'
