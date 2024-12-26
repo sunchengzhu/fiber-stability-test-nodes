@@ -3,34 +3,6 @@
 PORT=8236
 ip="43.198.254.225"
 
-response=$(curl -s -X POST "http://$ip:$PORT" \
-    -H "Content-Type: application/json" \
-    -d '{
-          "id": 1,
-          "jsonrpc": "2.0",
-          "method": "node_info",
-          "params": []
-        }')
-
-f_peer_id=$(echo "$response" | jq -r '.result.peer_id' | sed "s/0.0.0.0/$ip/")
-
-json_data=$(
-    cat <<EOF
-{
-    "id": 1,
-    "jsonrpc": "2.0",
-    "method": "list_channels",
-    "params": [
-        {
-            "peer_id": "$f_peer_id"
-        }
-    ]
-}
-EOF
-)
-
-curl -sS --location 'http://18.167.71.41:8231' --header 'Content-Type: application/json' --data "$json_data" | jq '.result'
-
 payment_preimage="0x$(openssl rand -hex 32)"
 
 response=$(curl -sS --location 'http://43.199.108.57:8237' \
@@ -69,7 +41,3 @@ curl -sS --location 'http://18.167.71.41:8231' --header 'Content-Type: applicati
 }
 EOF
 )" | jq -r
-
-sleep 5
-
-curl -sS --location 'http://18.167.71.41:8231' --header 'Content-Type: application/json' --data "$json_data" | jq '.result'

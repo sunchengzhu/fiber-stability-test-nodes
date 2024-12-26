@@ -21,12 +21,10 @@ public class GetBalance {
                 int aNodePort = 8231;
                 System.out.println("A → F");
                 getBalance.listChannels(peerId, aNodeIp, aNodePort);
-                System.out.println();
                 String bNodeIp = "18.167.71.41";
                 int bNodePort = 8232;
                 System.out.println("B → F");
                 getBalance.listChannels(peerId, bNodeIp, bNodePort);
-                System.out.println();
                 String gNodeIp = "43.199.108.57";
                 int gNodePort = 8237;
                 System.out.println("G → F");
@@ -100,11 +98,12 @@ public class GetBalance {
                     localBalance = localBalance.divide(scale, 3, RoundingMode.HALF_UP);
                     remoteBalance = remoteBalance.divide(scale, 3, RoundingMode.HALF_UP);
 
-                    System.out.println("Channel " + (i+1) + ": Local Balance: " + localBalance + ", Remote Balance: " + remoteBalance);
+                    System.out.println("Channel " + (i + 1) + ": Local Balance: " + localBalance + ", Remote Balance: " + remoteBalance);
                 }
             } else {
                 System.out.println("No channels found.");
             }
+            System.out.println();
         }
     }
 }
