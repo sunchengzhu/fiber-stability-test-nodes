@@ -8,6 +8,8 @@ repositories {
 
 dependencies {
     implementation 'org.nervos.ckb:ckb:2.1.1'
+    implementation 'org.json:json:20210307'
+    implementation 'com.squareup.okhttp3:okhttp:4.9.1'
 }
 
 //dependencies {
