@@ -2,6 +2,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
+import java.text.DecimalFormat;
 
 import okhttp3.*;
 import org.json.JSONArray;
@@ -29,6 +30,10 @@ public class GetBalance {
                 int gNodePort = 8237;
                 System.out.println("G → F");
                 getBalance.listChannels(peerId, gNodeIp, gNodePort);
+                String gPeerId = getBalance.getPeerId(gNodeIp, gNodePort);
+                System.out.println("H → G");
+                int hNodePort = 8238;
+                getBalance.listChannels(gPeerId, gNodeIp, hNodePort);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -84,6 +89,7 @@ public class GetBalance {
             JSONArray channels = jsonResponse.getJSONObject("result").getJSONArray("channels");
 
             if (channels.length() > 0) {
+                DecimalFormat df = new DecimalFormat("0.00000000"); // Ensure 8 decimal places
                 for (int i = 0; i < channels.length(); i++) {
                     JSONObject channel = channels.getJSONObject(i);
                     String localBalanceHex = channel.getString("local_balance");
@@ -95,10 +101,11 @@ public class GetBalance {
 
                     // Scale down by 10^8 and format to 3 decimal places
                     BigDecimal scale = new BigDecimal("100000000");
-                    localBalance = localBalance.divide(scale, 3, RoundingMode.HALF_UP);
-                    remoteBalance = remoteBalance.divide(scale, 3, RoundingMode.HALF_UP);
+                    localBalance = localBalance.divide(scale, 8, RoundingMode.HALF_UP);
+                    remoteBalance = remoteBalance.divide(scale, 8, RoundingMode.HALF_UP);
 
-                    System.out.println("Channel " + (i + 1) + ": Local Balance: " + localBalance + ", Remote Balance: " + remoteBalance);
+                    // Format the output to ensure no scientific notation
+                    System.out.println("Channel " + (i + 1) + ": Local Balance: " + df.format(localBalance) + ", Remote Balance: " + df.format(remoteBalance));
                 }
             } else {
                 System.out.println("No channels found.");
