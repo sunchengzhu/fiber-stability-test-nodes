@@ -1,6 +1,6 @@
 ## Dir
 ``` bash
-cd /home/ckb/scz/fiber-stability-test/remote
+cd /home/ckb/scz/fiber-stability-test-nodes/remote
 ```
 
 #### node_info 
