@@ -80,7 +80,7 @@ for idx in "${!PORTS[@]}"; do
                  "params": []
              }' "$id")")
   if [ $? -eq 0 ]; then
-    peer_id=$(echo "$response" | jq -r '.result.peer_id' | sed "s/0.0.0.0/$ip/")
+    peer_id=$(echo "$response" | jq -r '.result.addresses[0]' | awk -F '/' '{print $NF}' | sed "s/0.0.0.0/$ip/")
     peer_ids+=("$peer_id")
   else
     echo "Query to port $PORT failed."
