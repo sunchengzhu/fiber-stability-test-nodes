@@ -106,16 +106,25 @@ elif [ "$current_ip" == "43.198.254.225" ]; then
     curl -sS --location "http://$current_ip:$port" --header "Content-Type: application/json" --data "$shutdown_channel_json_data"
   fi
 elif [ "$current_ip" == "43.199.108.57" ]; then
-  for i in 6 7; do
-    port="${PORTS[i]}"
-    json_data=$(printf "$list_channels_f_json_data" "$port")
-    channel_id=$(curl -sS --location "http://$current_ip:$port" --header "Content-Type: application/json" --data "$json_data" | jq -r '.result.channels[0].channel_id')
-    echo "$channel_id"
-    echo ""
-    args=$(sed -n "$((i + 1))p" ../args.txt)
-    shutdown_channel_json_data=$(printf "$shutdown_channel_json_template" "$port" "$channel_id" "$args")
-    if [[ "$channel_id" != "null" && -n "$channel_id" ]]; then
-      curl -sS --location "http://$current_ip:$port" --header "Content-Type: application/json" --data "$shutdown_channel_json_data"
-    fi
-  done
+  port="${PORTS[6]}"
+  json_data=$(printf "$list_channels_f_json_data" "$port")
+  channel_id=$(curl -sS --location "http://$current_ip:$port" --header "Content-Type: application/json" --data "$json_data" | jq -r '.result.channels[0].channel_id')
+  echo "$channel_id"
+  echo ""
+  args=$(sed -n "$((6 + 1))p" ../args.txt)
+  shutdown_channel_json_data=$(printf "$shutdown_channel_json_template" "$port" "$channel_id" "$args")
+  if [[ "$channel_id" != "null" && -n "$channel_id" ]]; then
+    curl -sS --location "http://$current_ip:$port" --header "Content-Type: application/json" --data "$shutdown_channel_json_data"
+  fi
+
+  port="${PORTS[7]}"
+  json_data=$(printf "$list_channels_g_json_data" "$port")
+  channel_id=$(curl -sS --location "http://$current_ip:$port" --header "Content-Type: application/json" --data "$json_data" | jq -r '.result.channels[0].channel_id')
+  echo "$channel_id"
+  echo ""
+  args=$(sed -n "$((7 + 1))p" ../args.txt)
+  shutdown_channel_json_data=$(printf "$shutdown_channel_json_template" "$port" "$channel_id" "$args")
+  if [[ "$channel_id" != "null" && -n "$channel_id" ]]; then
+    curl -sS --location "http://$current_ip:$port" --header "Content-Type: application/json" --data "$shutdown_channel_json_data"
+  fi
 fi
