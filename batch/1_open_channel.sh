@@ -1,15 +1,18 @@
 #!/bin/bash
 
-PEER_ID="QmU2iS4UkAKm6Sq3udeVgmm7Naxr8BKFoVr6pxZ4Ty4iYe"
-IP="18.167.71.41"
-PORT="8232"
+PEER_ID="QmXen3eUHhywmutEzydCsW4hXBoeVmdET2FJvMX69XJ1Eo"
+IP="127.0.0.1"
+PORT="8231"
 NUM=5
 
 check_channels_ready() {
   local start_time=$(date +%s)
-  local timeout=180
+  local timeout=240
 
   while true; do
+    # 等待5秒再次检查
+    sleep 5
+
     # 直接在 curl 请求中构造 JSON 数据
     local states=$(curl -sS --location "http://$IP:$PORT" \
       --header "Content-Type: application/json" \
@@ -52,12 +55,9 @@ check_channels_ready() {
 
     # 超过时间限制则退出
     if [[ "$elapsed_time" -ge "$timeout" ]]; then
-      echo "超时：180秒内未所有通道都准备就绪。"
-      return
+      echo "超时：240秒内未所有通道都准备就绪。"
+      exit 1
     fi
-
-    # 等待5秒再次检查
-    sleep 5
   done
 }
 
@@ -80,5 +80,7 @@ EOF
 
 for ((i = 0; i < NUM; i++)); do
   curl --location "http://$IP:$PORT" --header "Content-Type: application/json" --data "$json_data"
+  echo ""
   check_channels_ready
+  wait_time=30
 done
