@@ -5,7 +5,8 @@ ARGS="0x7bfb5a5f50cc71460db96610b8a957ac1e063306"
 IP="127.0.0.1"
 PORT="8231"
 
-json_data=$(cat <<EOF
+json_data=$(
+  cat <<EOF
 {
     "id": 666,
     "jsonrpc": "2.0",
@@ -20,7 +21,6 @@ EOF
 )
 
 channel_ids=($(curl -s --location "http://${IP}:${PORT}" --header 'Content-Type: application/json' --data "$json_data" | jq -r '.result.channels[].channel_id'))
-
 
 shutdown_channel_json_template='{
   "id": "2",
