@@ -35,7 +35,7 @@ check_channels_ready() {
       if [[ "$state" == "CHANNEL_READY" ]]; then
         local current_time=$(date +%s)
         local elapsed_time=$((current_time - start_time))
-        echo "所有通道都已准备就绪，总耗时：${elapsed_time}秒。"
+        echo "最新通道已准备就绪，总耗时：${elapsed_time}秒。"
         return
       fi
     fi
