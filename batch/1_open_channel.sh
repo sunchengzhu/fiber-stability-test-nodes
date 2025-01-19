@@ -82,7 +82,8 @@ for ((i = 0; i < NUM; i++)); do
           }]
         }" | jq '.result.channels | length')
   channel_number=$((channels_count + 1))
-  echo "channel-$channel_number"
+  current_datetime=$(date "+%Y-%m-%d %H:%M:%S")
+  echo "channel-$channel_number at $current_datetime"
   curl --location "http://$IP:$PORT" --header "Content-Type: application/json" --data "$json_data"
   echo ""
   check_channels_ready "$channel_number"
