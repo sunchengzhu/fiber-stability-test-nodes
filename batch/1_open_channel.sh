@@ -77,10 +77,12 @@ function check_and_restart_service() {
     cd /Users/sunchengzhu/tmp/testnet-fnn
     RUST_LOG=info ./fnn -c "nodeA/config.yml" -d "nodeA" >"./nodeA/nodeA.log" 2>&1 &
     echo "Service restarted."
+    sleep 10
   fi
 }
 
 for ((i = 0; i < NUM; i++)); do
+  check_and_restart_service
   channels_count=$(curl -sS --location "http://$IP:$PORT" \
     --header "Content-Type: application/json" \
     -d "{
@@ -96,6 +98,5 @@ for ((i = 0; i < NUM; i++)); do
   echo "channel-$channel_number at $current_datetime"
   curl --location "http://$IP:$PORT" --header "Content-Type: application/json" --data "$json_data"
   echo ""
-  check_and_restart_service
   check_channels_ready "$channel_number"
 done
