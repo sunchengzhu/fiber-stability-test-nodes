@@ -30,16 +30,6 @@ public class Distribute {
         return address;
     }
 
-    public static String bytesToHex(byte[] bytes) {
-        Formatter formatter = new Formatter();
-        for (byte b : bytes) {
-            formatter.format("%02x", b);
-        }
-        String result = "0x" + formatter.toString();
-        formatter.close();
-        return result;
-    }
-
     public static long getBalance(Address address, CkbRpcApi ckbApi) throws IOException {
         Script script = address.getScript();
         SearchKeyBuilder key = new SearchKeyBuilder();
