@@ -7,9 +7,8 @@ pkill fnn
 
 if [ "$MODE" -eq 1 ]; then
   rm -rf fiber
-  git clone https://github.com/chenyukang/fiber.git
+  git clone https://github.com/nervosnetwork/fiber.git
   cd fiber
-  git checkout yukang-debug-send-each-other
   cargo build --release
 else
   cd fiber
