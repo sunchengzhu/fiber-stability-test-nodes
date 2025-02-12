@@ -2,6 +2,7 @@
 ``` bash
 cd /home/ckb/scz/fiber-stability-test-nodes/remote
 cd /home/ckb/scz/fiber-stability-test-nodes/fiber/tmp/testnet-fnn/node6
+head -n 1 /home/ckb/scz/fiber-stability-test-nodes/fiber/tmp/testnet-fnn/node6/node6.log
 ```
 
 #### node_info 
