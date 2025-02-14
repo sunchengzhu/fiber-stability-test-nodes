@@ -64,25 +64,27 @@ list_channels_g_json_data=$(
 EOF
 )
 
+jq_filter='[.result.channels[] | {state_name: .state.state_name, local_balance: .local_balance, remote_balance: .remote_balance}] | reverse | to_entries | .[] | "Channel \(.key+1): \(.value.state_name) local_balance: \(.value.local_balance) remote_balance: \(.value.remote_balance)"'
+
 if [ "$current_ip" == "18.167.71.41" ]; then
   for i in 0 1 2 3 4; do
     port="${PORTS[i]}"
     json_data=$(printf "$list_channels_f_json_data" "$port")
-    curl -sS --location "http://127.0.0.1:$port" --header "Content-Type: application/json" --data "$json_data" | jq -r '[.result.channels[].state.state_name] | reverse | to_entries | .[] | "Channel \(.key+1): \(.value)"'
+    curl -sS --location "http://127.0.0.1:$port" --header "Content-Type: application/json" --data "$json_data" | jq -r "$jq_filter"
     echo ""
   done
 elif [ "$current_ip" == "43.198.254.225" ]; then
   port="${PORTS[5]}"
   json_data=$(printf "$list_channels_g_json_data" "$port")
-  curl -sS --location "http://127.0.0.1:$port" --header "Content-Type: application/json" --data "$json_data" | jq -r '[.result.channels[].state.state_name] | reverse | to_entries | .[] | "Channel \(.key+1): \(.value)"'
+  curl -sS --location "http://127.0.0.1:$port" --header "Content-Type: application/json" --data "$json_data" | jq -r "$jq_filter"
   echo ""
 elif [ "$current_ip" == "43.199.108.57" ]; then
   port1="${PORTS[6]}"
   json_data1=$(printf "$list_channels_f_json_data" "$port1")
-  curl -sS --location "http://127.0.0.1:$port1" --header "Content-Type: application/json" --data "$json_data1" | jq -r '[.result.channels[].state.state_name] | reverse | to_entries | .[] | "Channel \(.key+1): \(.value)"'
+  curl -sS --location "http://127.0.0.1:$port1" --header "Content-Type: application/json" --data "$json_data1" | jq -r "$jq_filter"
   echo ""
 
   port2="${PORTS[7]}"
   json_data2=$(printf "$list_channels_g_json_data" "$port2")
-  curl -sS --location "http://127.0.0.1:$port2" --header "Content-Type: application/json" --data "$json_data2" | jq -r '[.result.channels[].state.state_name] | reverse | to_entries | .[] | "Channel \(.key+1): \(.value)"'
+  curl -sS --location "http://127.0.0.1:$port2" --header "Content-Type: application/json" --data "$json_data2" | jq -r "$jq_filter"
 fi
