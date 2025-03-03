@@ -20,6 +20,8 @@ for dir in $(ls -d ./testnet-fnn/node*); do
   rm -rf "./testnet-fnn/$node_id/fiber/store"
   cp -r "./testnet-fnn/$node_id/fiber/$store_name" "./testnet-fnn/$node_id/fiber/store"
 #  ./fnn-migrate -p "testnet-fnn/$node_id/fiber/store"
+  ls "./testnet-fnn/$node_id"
+  ls "./testnet-fnn/$node_id/fiber"
   RUST_LOG=info ./fnn -c "$dir/config.yml" -d "$dir" >"./testnet-fnn/$node_id/$node_id.log" 2>&1 &
   sleep 5
   head -n 1 "./testnet-fnn/$node_id/$node_id.log"
