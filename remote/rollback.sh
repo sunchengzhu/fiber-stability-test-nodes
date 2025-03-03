@@ -1,5 +1,7 @@
 #!/bin/bash
 
+pkill fnn
+
 rm -f ../fiber/tmp/fnn
 cp /home/ckb/scz/0_4_0/fnn ../fiber/tmp/fnn
 #cp /home/ckb/scz/2858151/fnn ../fiber/tmp/fnn
