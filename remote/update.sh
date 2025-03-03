@@ -15,7 +15,6 @@ for dir in $(ls -d ./testnet-fnn/node*); do
   rm -f "./testnet-fnn/$node_id/config.yml"
   cp "./testnet-fnn/$node_id/$config_name" "./testnet-fnn/$node_id/config.yml"
   ./fnn-migrate -p "testnet-fnn/$node_id/fiber/store"
-  sleep 10
   RUST_LOG=info ./fnn -c "$dir/config.yml" -d "$dir" >"./testnet-fnn/$node_id/$node_id.log" 2>&1 &
   sleep 5
   head -n 1 "./testnet-fnn/$node_id/$node_id.log"
