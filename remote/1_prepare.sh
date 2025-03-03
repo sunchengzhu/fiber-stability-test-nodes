@@ -23,11 +23,11 @@ cd tmp
 start_node_id=1
 end_node_id=8
 
-# 检查是否已存在 announce_private_addr
-if ! yq eval '.fiber.announce_private_addr' "../config/testnet/config.yml" | grep -q true; then
-  yq eval '.fiber.announce_private_addr = true' -i "../config/testnet/config.yml"
-fi
-yq eval '.fiber.announce_private_addr' "../config/testnet/config.yml"
+## 检查是否已存在 announce_private_addr
+#if ! yq eval '.fiber.announce_private_addr' "../config/testnet/config.yml" | grep -q true; then
+#  yq eval '.fiber.announce_private_addr = true' -i "../config/testnet/config.yml"
+#fi
+#yq eval '.fiber.announce_private_addr' "../config/testnet/config.yml"
 
 # 创建目录、复制配置文件并设置密钥，同时更新配置并打印配置情况
 for ((id = $start_node_id; id <= $end_node_id; id++)); do
