@@ -4,6 +4,7 @@ pkill fnn
 
 rm -f ../fiber/tmp/fnn
 cp /home/ckb/scz/version/0_4_0/fnn ../fiber/tmp/fnn
+cp /home/ckb/scz/version/0_4_0/fnn-migrate ../fiber/tmp/fnn-migrate
 ../fiber/tmp/fnn --version
 
 config_name="0_4_0-config.yml"
