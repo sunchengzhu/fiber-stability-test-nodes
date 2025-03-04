@@ -3,7 +3,7 @@
 pkill fnn
 
 rm -f ../fiber/tmp/fnn
-cp /home/ckb/scz/version/fnn ../fiber/tmp/fnn
+cp /home/ckb/scz/version/0_4_0/fnn ../fiber/tmp/fnn
 ../fiber/tmp/fnn --version
 
 config_name="0_4_0-config.yml"
