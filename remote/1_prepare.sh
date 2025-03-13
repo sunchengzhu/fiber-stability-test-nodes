@@ -16,7 +16,7 @@ else
 fi
 
 mkdir tmp
-cp /home/ckb/scz/version/0_3_1/fnn tmp
+cp /home/ckb/scz/version/tunning-find-path/fnn tmp
 cd tmp
 
 # 节点范围定义
