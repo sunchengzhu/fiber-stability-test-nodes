@@ -1,14 +1,14 @@
 #!/bin/bash
 
-PORTS=(8236 8237)
+INTERNAL_PORTS=(8236 8237)
 IPS=("172.31.28.209" "172.31.16.223")
 addresses=()
 
-for idx in "${!PORTS[@]}"; do
-  PORT=${PORTS[idx]}
+for idx in "${!INTERNAL_PORTS[@]}"; do
+  INTERNAL_PORT=${INTERNAL_PORTS[idx]}
   IP=${IPS[idx]}
 
-  response=$(curl -s -X POST "http://$IP:$PORT" \
+  response=$(curl -s -X POST "http://$IP:$INTERNAL_PORT" \
     -H "Content-Type: application/json" \
     -d '{
           "id": 1,
@@ -21,7 +21,7 @@ for idx in "${!PORTS[@]}"; do
     address=$(echo "$response" | jq -r '.result.addresses[]' | sed "s/0.0.0.0/$IP/")
     addresses+=("$address")
   else
-    echo "Query to port $PORT failed."
+    echo "Query to port $INTERNAL_PORT failed."
   fi
 done
 
@@ -63,6 +63,8 @@ connect_peer_g_json_data=$(
 }
 EOF
 )
+
+PORTS=($(seq 8231 8238))
 
 if [ "$current_ip" == "18.167.71.41" ]; then
   for i in 0 1 2 3 4; do
