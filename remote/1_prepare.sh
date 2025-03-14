@@ -23,12 +23,6 @@ cd tmp
 start_node_id=1
 end_node_id=8
 
-## 检查是否已存在 announce_private_addr
-#if ! yq eval '.fiber.announce_private_addr' "../config/testnet/config.yml" | grep -q true; then
-#  yq eval '.fiber.announce_private_addr = true' -i "../config/testnet/config.yml"
-#fi
-#yq eval '.fiber.announce_private_addr' "../config/testnet/config.yml"
-
 # 创建目录、复制配置文件并设置密钥，同时更新配置并打印配置情况
 for ((id = $start_node_id; id <= $end_node_id; id++)); do
   # 创建目录并复制配置文件
@@ -46,7 +40,7 @@ for ((id = $start_node_id; id <= $end_node_id; id++)); do
     ip="0.0.0.0"
   elif [ "$id" -eq 6 ]; then
     ip="172.31.28.209"
-    yq eval ".fiber.announced_addrs = [\"/ip4/${ip}/tcp/${fiber_port}\"]" -i "testnet-fnn/node${id}/config.yml"
+    yq eval '.fiber.announce_private_addr = true' -i "testnet-fnn/node${id}/config.yml"
   elif [ "$id" -eq 7 ]; then
     ip="172.31.16.223"
     yq eval '.fiber.announce_private_addr = true' -i "testnet-fnn/node${id}/config.yml"
