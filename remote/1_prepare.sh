@@ -49,9 +49,9 @@ for ((id = $start_node_id; id <= $end_node_id; id++)); do
     yq eval ".fiber.announced_addrs = [\"/ip4/${ip}/tcp/${fiber_port}\"]" -i "testnet-fnn/node${id}/config.yml"
   elif [ "$id" -eq 7 ]; then
     ip="172.31.16.223"
-    yq eval ".fiber.announced_addrs = [\"/ip4/${ip}/tcp/${fiber_port}\"]" -i "testnet-fnn/node${id}/config.yml"
+    yq eval '.fiber.announce_private_addr = true' -i "testnet-fnn/node${id}/config.yml"
   elif [ "$id" -eq 8 ]; then
-    ip="172.31.16.223"
+    ip="0.0.0.0"
   fi
 
   # 更新配置文件中的地址
