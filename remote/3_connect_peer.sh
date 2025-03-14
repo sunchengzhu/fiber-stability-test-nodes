@@ -2,6 +2,7 @@
 
 INTERNAL_PORTS=(8236 8237)
 IPS=("172.31.28.209" "172.31.16.223")
+addresses=()
 
 for idx in "${!INTERNAL_PORTS[@]}"; do
   INTERNAL_PORT=${INTERNAL_PORTS[idx]}
@@ -16,15 +17,12 @@ for idx in "${!INTERNAL_PORTS[@]}"; do
           "params": []
         }')
 
-  address=$(echo "$response" | jq -r '.result.addresses[]')
-
-  if [ "$idx" -eq 0 ]; then
-    f_address="$address"
-  elif [ "$idx" -eq 1 ]; then
-    g_address="$address"
-  fi
+  address=$(echo "$response" | jq -r '.result.addresses[]' | sed "s/0.0.0.0/$IP/")
+  addresses+=("$address")
 done
 
+f_address="${addresses[0]}"
+g_address="${addresses[1]}"
 echo "f_address: $f_address"
 echo "g_address: $g_address"
 

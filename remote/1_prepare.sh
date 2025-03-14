@@ -36,17 +36,10 @@ for ((id = $start_node_id; id <= $end_node_id; id++)); do
   rpc_port=$((8230 + id))
 
   # 根据 id 修改配置文件中的地址
-  if [ "$id" -ge 1 ] && [ "$id" -le 5 ]; then
-    ip="0.0.0.0"
-  elif [ "$id" -eq 6 ]; then
-    ip="172.31.28.209"
+  if [ "$id" -eq 6 ] || [ "$id" -eq 7 ]; then
     yq eval '.fiber.announce_private_addr = true' -i "testnet-fnn/node${id}/config.yml"
-  elif [ "$id" -eq 7 ]; then
-    ip="172.31.16.223"
-    yq eval '.fiber.announce_private_addr = true' -i "testnet-fnn/node${id}/config.yml"
-  elif [ "$id" -eq 8 ]; then
-    ip="0.0.0.0"
   fi
+  ip="0.0.0.0"
 
   # 更新配置文件中的地址
   yq eval ".fiber.listening_addr = \"/ip4/$ip/tcp/$fiber_port\"" -i "testnet-fnn/node$id/config.yml"
