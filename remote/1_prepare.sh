@@ -43,14 +43,14 @@ for ((id = $start_node_id; id <= $end_node_id; id++)); do
 
   # 根据 id 修改配置文件中的地址
   if [ "$id" -ge 1 ] && [ "$id" -le 5 ]; then
-    ip="172.31.23.160"
+    ip="0.0.0.0"
   elif [ "$id" -eq 6 ]; then
     ip="172.31.28.209"
     yq eval ".fiber.announced_addrs = [\"/ip4/${ip}/tcp/${fiber_port}\"]" -i "testnet-fnn/node${id}/config.yml"
-  elif [ "$id" -ge 7 ]; then
+  elif [ "$id" -eq 7 ]; then
     ip="172.31.16.223"
     yq eval ".fiber.announced_addrs = [\"/ip4/${ip}/tcp/${fiber_port}\"]" -i "testnet-fnn/node${id}/config.yml"
-  elif [ "$id" -le 8 ]; then
+  elif [ "$id" -eq 8 ]; then
     ip="172.31.16.223"
   fi
 
