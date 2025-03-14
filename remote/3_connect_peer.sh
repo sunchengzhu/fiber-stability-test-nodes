@@ -1,19 +1,14 @@
 #!/bin/bash
 
-PORTS=($(seq 8231 8238))
+PORTS=(8236 8237)
+IPS=("172.31.28.209" "172.31.16.223")
 addresses=()
 
 for idx in "${!PORTS[@]}"; do
   PORT=${PORTS[idx]}
-  if [ "$idx" -lt 5 ]; then
-    ip="18.167.71.41"
-  elif [ "$idx" -eq 5 ]; then
-    ip="43.198.254.225"
-  elif [ "$idx" -ge 6 ]; then
-    ip="43.199.108.57"
-  fi
+  IP=${IPS[idx]}
 
-  response=$(curl -s -X POST "http://$ip:$PORT" \
+  response=$(curl -s -X POST "http://$IP:$PORT" \
     -H "Content-Type: application/json" \
     -d '{
           "id": 1,
@@ -21,19 +16,20 @@ for idx in "${!PORTS[@]}"; do
           "method": "node_info",
           "params": []
         }')
-  if [ $? -eq 0 ]; then
-    address=$(echo "$response" | jq -r '.result.addresses[]' | sed "s/0.0.0.0/$ip/")
+
+  if [ $? -eq 0 ] && [[ $(echo "$response" | jq -e '.result.addresses') ]]; then
+    address=$(echo "$response" | jq -r '.result.addresses[]' | sed "s/0.0.0.0/$IP/")
     addresses+=("$address")
   else
     echo "Query to port $PORT failed."
   fi
 done
 
-f_address="${addresses[5]}"
-g_address="${addresses[6]}"
+f_address="${addresses[0]}"
+g_address="${addresses[1]}"
 
-#echo "$f_address"
-#echo "$g_address"
+echo "$f_address"
+echo "$g_address"
 
 current_ip=$(curl -s ifconfig.me)
 
