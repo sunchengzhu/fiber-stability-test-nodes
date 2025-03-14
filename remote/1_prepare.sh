@@ -23,11 +23,11 @@ cd tmp
 start_node_id=1
 end_node_id=8
 
-# 检查是否已存在 announce_private_addr
-if ! yq eval '.fiber.announce_private_addr' "../config/testnet/config.yml" | grep -q true; then
-  yq eval '.fiber.announce_private_addr = true' -i "../config/testnet/config.yml"
-fi
-yq eval '.fiber.announce_private_addr' "../config/testnet/config.yml"
+## 检查是否已存在 announce_private_addr
+#if ! yq eval '.fiber.announce_private_addr' "../config/testnet/config.yml" | grep -q true; then
+#  yq eval '.fiber.announce_private_addr = true' -i "../config/testnet/config.yml"
+#fi
+#yq eval '.fiber.announce_private_addr' "../config/testnet/config.yml"
 
 # 创建目录、复制配置文件并设置密钥，同时更新配置并打印配置情况
 for ((id = $start_node_id; id <= $end_node_id; id++)); do
@@ -42,14 +42,17 @@ for ((id = $start_node_id; id <= $end_node_id; id++)); do
   rpc_port=$((8230 + id))
 
   # 根据 id 修改配置文件中的地址
-  #  if [ "$id" -ge 1 ] && [ "$id" -le 5 ]; then
-  #    ip="18.167.71.41"
-  #  elif [ "$id" -eq 6 ]; then
-  #    ip="43.198.254.225"
-  #  elif [ "$id" -ge 7 ] && [ "$id" -le 8 ]; then
-  #    ip="43.199.108.57"
-  #  fi
-  ip=0.0.0.0
+  if [ "$id" -ge 1 ] && [ "$id" -le 5 ]; then
+    ip="172.31.23.160"
+  elif [ "$id" -eq 6 ]; then
+    ip="172.31.28.209"
+    yq eval ".fiber.announced_addrs = [\"/ip4/${ip}/tcp/${fiber_port}\"]" -i "testnet-fnn/node${id}/config.yml"
+  elif [ "$id" -ge 7 ]; then
+    ip="172.31.16.223"
+    yq eval ".fiber.announced_addrs = [\"/ip4/${ip}/tcp/${fiber_port}\"]" -i "testnet-fnn/node${id}/config.yml"
+  elif [ "$id" -le 8 ]; then
+    ip="172.31.16.223"
+  fi
 
   # 更新配置文件中的地址
   yq eval ".fiber.listening_addr = \"/ip4/$ip/tcp/$fiber_port\"" -i "testnet-fnn/node$id/config.yml"
