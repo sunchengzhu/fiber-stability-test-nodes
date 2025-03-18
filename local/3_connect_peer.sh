@@ -14,7 +14,7 @@ echo "$address2"
 curl -s --location 'http://127.0.0.1:8231' \
   --header 'Content-Type: application/json' \
   --data "{
-    \"id\": 1,
+    \"id\": 8231,
     \"jsonrpc\": \"2.0\",
     \"method\": \"connect_peer\",
     \"params\": [
@@ -26,10 +26,10 @@ curl -s --location 'http://127.0.0.1:8231' \
 
 echo
 
-curl -s --location 'http://127.0.0.1:8232' \
+curl -s --location 'http://127.0.0.1:8233' \
   --header 'Content-Type: application/json' \
   --data "{
-    \"id\": 2,
+    \"id\": 8233,
     \"jsonrpc\": \"2.0\",
     \"method\": \"connect_peer\",
     \"params\": [

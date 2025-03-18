@@ -15,6 +15,8 @@ else
   echo "Query to port 8232 failed."
 fi
 
+jq_filter='[.result.channels[] | {state_name: .state.state_name, local_balance: .local_balance, remote_balance: .remote_balance}] | reverse | to_entries | .[] | "Channel \(.key+1): \(.value.state_name) local_balance: \(.value.local_balance) remote_balance: \(.value.remote_balance)"'
+
 for id in 1 3; do
   port=$((8230 + id))
 
@@ -33,5 +35,5 @@ for id in 1 3; do
 EOF
   )
 
-  curl -sS --location "http://127.0.0.1:$port" --header "Content-Type: application/json" --data "$list_channels_json_data" | jq -r
+  curl -sS --location "http://127.0.0.1:$port" --header "Content-Type: application/json" --data "$list_channels_json_data" | jq -r "$jq_filter"
 done
