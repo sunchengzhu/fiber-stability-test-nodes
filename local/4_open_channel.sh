@@ -58,7 +58,7 @@ check_channels_ready() {
   done
 }
 
-response=$(curl -s -X POST http://127.0.0.1:8232 \
+response2=$(curl -s -X POST http://127.0.0.1:8232 \
   -H "Content-Type: application/json" \
   -d '{
         "id": 1,
@@ -68,14 +68,30 @@ response=$(curl -s -X POST http://127.0.0.1:8232 \
       }')
 
 if [ $? -eq 0 ]; then
-  peer_id=$(echo "$response" | jq -r '.result.addresses[0]' | awk -F '/' '{print $NF}' | sed 's/0.0.0.0/127.0.0.1/')
-  echo "Peer ID: $peer_id"
+  peer_id2=$(echo "$response2" | jq -r '.result.addresses[0]' | awk -F '/' '{print $NF}' | sed 's/0.0.0.0/127.0.0.1/')
+  echo "Peer ID: $peer_id2"
 else
   echo "Query to port 8232 failed."
 fi
 
+response3=$(curl -s -X POST http://127.0.0.1:8233 \
+  -H "Content-Type: application/json" \
+  -d '{
+        "id": 1,
+        "jsonrpc": "2.0",
+        "method": "node_info",
+        "params": []
+      }')
+
+if [ $? -eq 0 ]; then
+  peer_id3=$(echo "$response3" | jq -r '.result.addresses[0]' | awk -F '/' '{print $NF}' | sed 's/0.0.0.0/127.0.0.1/')
+  echo "Peer ID: $peer_id3"
+else
+  echo "Query to port 8233 failed."
+fi
+
 port1=8231
-port2=8233
+port2=8232
 
 json_data1=$(
   cat <<EOF
@@ -85,7 +101,7 @@ json_data1=$(
   "method": "open_channel",
   "params": [
     {
-      "peer_id": "$peer_id",
+      "peer_id": "$peer_id2",
       "funding_amount": "0x4ae0da900",
       "public": true
     }
@@ -102,7 +118,7 @@ json_data2=$(
   "method": "open_channel",
   "params": [
     {
-      "peer_id": "$peer_id",
+      "peer_id": "$peer_id3",
       "funding_amount": "0x4b4038a00",
       "public": true
     }
@@ -113,8 +129,8 @@ EOF
 
 curl --location "http://127.0.0.1:$port1" --header "Content-Type: application/json" --data "$json_data1"
 echo ""
-check_channels_ready "$port1" "$peer_id"
+check_channels_ready "$port1" "$peer_id2"
 
 curl --location "http://127.0.0.1:$port2" --header "Content-Type: application/json" --data "$json_data2"
 echo ""
-check_channels_ready "$port2" "$peer_id"
+check_channels_ready "$port2" "$peer_id3"

@@ -1,8 +1,8 @@
 #!/bin/bash
 
-cd ..
 pkill fnn
 
+cd ..
 #rm -rf fiber
 #git clone https://github.com/nervosnetwork/fiber.git
 cd fiber
