@@ -1,23 +1,12 @@
 #!/bin/bash
 
-MODE=0
-
-cd ..
 pkill fnn
+cd ..
+rm -rf fiber && mkdir fiber && cd fiber
 
-if [ "$MODE" -eq 1 ]; then
-  rm -rf fiber
-  git clone https://github.com/nervosnetwork/fiber.git
-  cd fiber
-  cargo build --release
-else
-  cd fiber
-  rm -rf tmp
-fi
-
-mkdir tmp
-cp /home/ckb/scz/version/0_4_0/fnn tmp
-cd tmp
+download_url=$(curl -s https://api.github.com/repos/nervosnetwork/fiber/releases | jq -r '.[0].assets[] | select(.name | endswith("linux-portable.tar.gz")) | .browser_download_url')
+wget -q "$download_url"
+tar xzvf *-linux-portable.tar.gz
 
 # 节点范围定义
 start_node_id=1
@@ -28,7 +17,7 @@ for ((id = $start_node_id; id <= $end_node_id; id++)); do
   # 创建目录并复制配置文件
   mkdir -p "testnet-fnn/node$id/ckb"
   cp "../config/testnet/config.yml" "testnet-fnn/node$id/config.yml"
-  sed -n "${id}p" "../../keys.txt" >"testnet-fnn/node$id/ckb/key"
+  sed -n "${id}p" "../keys.txt" >"testnet-fnn/node$id/ckb/key"
   chmod 600 "testnet-fnn/node$id/ckb/key"
 
   # 计算端口号
