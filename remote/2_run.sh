@@ -29,7 +29,7 @@ ls ../fiber/testnet-fnn
 cd ../fiber
 for dir in $(ls -d ./testnet-fnn/node*); do
   node_id=$(basename "$dir")
-  tmux new-session -d -s fnn_session "RUST_LOG=info ./fnn -c \"$dir/config.yml\" -d \"$dir\" > \"./testnet-fnn/$node_id/$node_id.log\" 2>&1"
+  tmux new-session -d -s fnn_session_${node_id} "RUST_LOG=info ./fnn -c \"$dir/config.yml\" -d \"$dir\" > \"./testnet-fnn/$node_id/$node_id.log\" 2>&1"
   sleep 3
   ./fnn --version
   head -n 1 "./testnet-fnn/$node_id/$node_id.log"
