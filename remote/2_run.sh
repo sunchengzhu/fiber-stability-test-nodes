@@ -1,6 +1,6 @@
 #!/bin/bash
 
-pkill fnn
+tmux kill-server
 
 # 获取公共 IP 地址
 IP=$(curl -s ifconfig.me)
