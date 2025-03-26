@@ -130,7 +130,7 @@ if [ "$current_ip" == "18.167.71.41" ]; then
   for i in 0 1 2 3 4; do
     port="${PORTS[i]}"
     json_data=$(printf "$open_channel_f_json_data" "$port")
-    curl --location "http://172.31.23.160:$port" --header "Content-Type: application/json" --data "$json_data"
+    curl -sS --location "http://172.31.23.160:$port" --header "Content-Type: application/json" --data "$json_data"
     echo ""
     check_channels_ready "$port" "$f_peer_id"
   done
