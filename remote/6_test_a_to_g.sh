@@ -65,7 +65,7 @@ EOF
         )")
 
     status=$(echo "$payment_response" | jq -r '.result.status')
-    echo "status is: '$status'"
+    echo "status: '$status'"
 
     if [ "$status" = "Success" ]; then
         elapsed=$(($(date +%s) - start_time))
