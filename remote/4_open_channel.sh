@@ -124,6 +124,8 @@ open_channel_g_json_data=$(
 EOF
 )
 
+TZ=Asia/Shanghai date "+%Y-%m-%d %H:%M:%S"
+
 current_ip=$(curl -s ifconfig.me)
 
 if [ "$current_ip" == "18.167.71.41" ]; then
