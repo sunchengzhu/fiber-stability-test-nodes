@@ -50,7 +50,7 @@ check_channels_ready() {
     # 超过时间限制则退出
     if [[ "$elapsed_time" -ge "$timeout" ]]; then
       echo "超时：180秒内未所有通道都准备就绪。"
-      return
+      exit 1
     fi
 
     # 等待5秒再次检查
