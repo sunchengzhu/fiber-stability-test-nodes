@@ -4,7 +4,13 @@ pkill fnn
 cd ..
 rm -rf fiber && mkdir fiber && cd fiber
 
-download_url=$(curl -s https://api.github.com/repos/nervosnetwork/fiber/releases | jq -r '.[0].assets[] | select(.name | endswith("linux-portable.tar.gz")) | .browser_download_url')
+if [ -z "$1" ] || [ "$1" == "latest" ]; then
+  download_url=$(curl -s https://api.github.com/repos/nervosnetwork/fiber/releases |
+    jq -r '.[0].assets[] | select(.name | endswith("linux-portable.tar.gz")) | .browser_download_url')
+else
+  fiber_version="$1"
+  download_url="https://github.com/nervosnetwork/fiber/releases/download/v${fiber_version}/fnn_v${fiber_version}-x86_64-linux-portable.tar.gz"
+fi
 wget -q "$download_url"
 tar xzvf *-linux-portable.tar.gz
 
