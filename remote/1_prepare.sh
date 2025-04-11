@@ -14,7 +14,7 @@ else
   download_url="https://github.com/nervosnetwork/fiber/releases/download/v${fiber_version}/fnn_v${fiber_version}-x86_64-linux-portable.tar.gz"
 fi
 wget -q "$download_url"
-tar xzvf *-linux-portable.tar.gz
+tar xzvf fnn_*-linux-portable.tar.gz
 
 # 节点范围定义
 start_node_id=1
