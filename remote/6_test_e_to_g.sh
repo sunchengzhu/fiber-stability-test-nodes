@@ -46,7 +46,7 @@ EOF
         )" | jq -r '.result.payment_hash')
 
     echo "payment_hash: $payment_hash"
-    sleep 1
+    sleep 3
 
     payment_response=$(curl -sS --location 'http://127.0.0.1:8235' \
         --header 'Content-Type: application/json' \
