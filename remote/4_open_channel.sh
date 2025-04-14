@@ -1,5 +1,18 @@
 #!/bin/bash
 
+# 判断是否传入参数，否则默认次数为1
+if [ -z "$1" ]; then
+  OPEN_CHANNEL_COUNT=1
+else
+  OPEN_CHANNEL_COUNT=$1
+fi
+
+# 参数校验：必须为正整数
+if ! [[ "$OPEN_CHANNEL_COUNT" =~ ^[1-9][0-9]*$ ]]; then
+  echo "Error: open_channel_count 必须为正整数。"
+  usage
+fi
+
 check_channels_ready() {
   local port=$1
   local peer_id=$2
@@ -131,10 +144,18 @@ current_ip=$(curl -s ifconfig.me)
 if [ "$current_ip" == "18.167.71.41" ]; then
   for i in {0..4}; do
     port="${PORTS[i]}"
-    json_data=$(printf "$open_channel_f_json_data" "$port")
-    curl -sS --location "http://172.31.23.160:$port" --header "Content-Type: application/json" --data "$json_data"
-    echo ""
-    check_channels_ready "$port" "$f_peer_id"
+    # 默认执行 1 次，只有 i 为 0 时执行 OPEN_CHANNEL_COUNT 次
+    repeat_count=1
+    if [ "$i" -eq 0 ]; then
+      repeat_count=$OPEN_CHANNEL_COUNT
+    fi
+
+    for ((j = 1; j <= repeat_count; j++)); do
+      json_data=$(printf "$open_channel_f_json_data" "$port")
+      curl -sS --location "http://172.31.23.160:$port" --header "Content-Type: application/json" --data "$json_data"
+      echo ""
+      check_channels_ready "$port" "$f_peer_id"
+    done
   done
   # for i in {0..4}; do
   #   port="${PORTS[i]}"
@@ -148,11 +169,12 @@ elif [ "$current_ip" == "43.198.254.225" ]; then
   check_channels_ready "$port" "$g_peer_id"
 elif [ "$current_ip" == "43.199.108.57" ]; then
   port1="${PORTS[6]}"
-  json_data1=$(printf "$open_channel_f_json_data" "$port1")
-  curl -sS --location "http://172.31.16.223:$port1" --header "Content-Type: application/json" --data "$json_data1"
-  echo ""
-  check_channels_ready "$port1" "$f_peer_id"
-
+  for ((j = 1; j <= OPEN_CHANNEL_COUNT; j++)); do
+    json_data1=$(printf "$open_channel_f_json_data" "$port1")
+    curl -sS --location "http://172.31.16.223:$port1" --header "Content-Type: application/json" --data "$json_data1"
+    echo ""
+    check_channels_ready "$port1" "$f_peer_id"
+  done
   port2="${PORTS[7]}"
   json_data2=$(printf "$open_channel_g_json_data" "$port2")
   curl -sS --location "http://172.31.16.223:$port2" --header "Content-Type: application/json" --data "$json_data2"
