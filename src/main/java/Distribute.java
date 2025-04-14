@@ -54,7 +54,7 @@ public class Distribute {
     public static void main(String[] args) throws IOException {
         CkbRpcApi ckbApi = new Api("https://testnet.ckb.dev/");
         String filePath = "keys.txt";
-        int baseAmount = 2000;
+        int baseAmount = 3500;
 
         int index = 1;
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
