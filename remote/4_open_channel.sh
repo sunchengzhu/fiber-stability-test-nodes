@@ -150,8 +150,8 @@ if [ "$current_ip" == "18.167.71.41" ]; then
       repeat_count=$OPEN_CHANNEL_COUNT
     fi
 
+    json_data=$(printf "$open_channel_f_json_data" "$port")
     for ((j = 1; j <= repeat_count; j++)); do
-      json_data=$(printf "$open_channel_f_json_data" "$port")
       curl -sS --location "http://172.31.23.160:$port" --header "Content-Type: application/json" --data "$json_data"
       echo ""
       check_channels_ready "$port" "$f_peer_id"
@@ -164,17 +164,18 @@ if [ "$current_ip" == "18.167.71.41" ]; then
 elif [ "$current_ip" == "43.198.254.225" ]; then
   port="${PORTS[5]}"
   json_data=$(printf "$open_channel_g_json_data" "$port")
-  curl -sS --location "http://172.31.28.209:$port" --header "Content-Type: application/json" --data "$json_data"
-  echo ""
-  check_channels_ready "$port" "$g_peer_id"
+  for ((j = 1; j <= OPEN_CHANNEL_COUNT; j++)); do
+    curl -sS --location "http://172.31.28.209:$port" --header "Content-Type: application/json" --data "$json_data"
+    echo ""
+    check_channels_ready "$port" "$g_peer_id"
+  done
 elif [ "$current_ip" == "43.199.108.57" ]; then
   port1="${PORTS[6]}"
-  for ((j = 1; j <= OPEN_CHANNEL_COUNT; j++)); do
-    json_data1=$(printf "$open_channel_f_json_data" "$port1")
-    curl -sS --location "http://172.31.16.223:$port1" --header "Content-Type: application/json" --data "$json_data1"
-    echo ""
-    check_channels_ready "$port1" "$f_peer_id"
-  done
+  json_data1=$(printf "$open_channel_f_json_data" "$port1")
+  curl -sS --location "http://172.31.16.223:$port1" --header "Content-Type: application/json" --data "$json_data1"
+  echo ""
+  check_channels_ready "$port1" "$f_peer_id"
+  
   port2="${PORTS[7]}"
   json_data2=$(printf "$open_channel_g_json_data" "$port2")
   curl -sS --location "http://172.31.16.223:$port2" --header "Content-Type: application/json" --data "$json_data2"
