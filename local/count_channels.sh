@@ -34,7 +34,7 @@ jq_filter='[.result.channels[] | {state_name: .state.state_name, local_balance: 
 
 for id in 1 2; do
   port=$((8230 + id))
-  peer_var_name="peer_id$((id+1))"
+  peer_var_name="peer_id$((id + 1))"
 
   list_channels_json_data=$(
     cat <<EOF

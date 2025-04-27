@@ -92,8 +92,9 @@ fi
 
 port1=8231
 port2=8232
+port3=8233
 
-json_data1=$(
+json_data12=$(
   cat <<EOF
 {
   "id": "$port1",
@@ -110,7 +111,7 @@ json_data1=$(
 EOF
 )
 
-json_data2=$(
+json_data23=$(
   cat <<EOF
 {
   "id": "$port2",
@@ -127,10 +128,33 @@ json_data2=$(
 EOF
 )
 
-curl --location "http://127.0.0.1:$port1" --header "Content-Type: application/json" --data "$json_data1"
+json_data32=$(
+  cat <<EOF
+{
+  "id": "$port3",
+  "jsonrpc": "2.0",
+  "method": "open_channel",
+  "params": [
+    {
+      "peer_id": "$peer_id2",
+      "funding_amount": "0x4b9f96b00",
+      "public": true
+    }
+  ]
+}
+EOF
+)
+
+curl --location "http://127.0.0.1:$port1" --header "Content-Type: application/json" --data "$json_data12"
 echo ""
 check_channels_ready "$port1" "$peer_id2"
 
-curl --location "http://127.0.0.1:$port2" --header "Content-Type: application/json" --data "$json_data2"
+curl --location "http://127.0.0.1:$port2" --header "Content-Type: application/json" --data "$json_data23"
 echo ""
 check_channels_ready "$port2" "$peer_id3"
+
+if [ "$1" == "find" ]; then
+  curl --location "http://127.0.0.1:$port3" --header "Content-Type: application/json" --data "$json_data32"
+  echo ""
+  check_channels_ready "$port3" "$peer_id2"
+fi
