@@ -7,7 +7,7 @@ while true; do
     payment_preimage="0x$(openssl rand -hex 32)"
 
     # 0.01 CKB
-    response=$(curl -sS --location 'http://43.199.108.57:8231' \
+    response=$(curl -sS --location 'http://18.167.71.41:8231' \
         --header 'Content-Type: application/json' \
         --data "$(
             cat <<EOF
