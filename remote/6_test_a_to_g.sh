@@ -7,7 +7,7 @@ while true; do
     payment_preimage="0x$(openssl rand -hex 32)"
 
     # 0.01 CKB
-    response=$(curl -sS --location 'http://18.167.71.41:8231' \
+    response=$(curl -sS --location 'http://43.199.108.57:8237' \
         --header 'Content-Type: application/json' \
         --data "$(
             cat <<EOF
@@ -30,7 +30,7 @@ EOF
 
     invoice_address=$(echo "$response" | jq -r '.result.invoice_address')
 
-    payment_hash=$(curl -sS --location 'http://127.0.0.1:8235' \
+    payment_hash=$(curl -sS --location 'http://127.0.0.1:8231' \
         --header 'Content-Type: application/json' \
         --data "$(
             cat <<EOF
@@ -48,7 +48,7 @@ EOF
     echo "payment_hash: $payment_hash"
     sleep 3
 
-    payment_response=$(curl -sS --location 'http://127.0.0.1:8235' \
+    payment_response=$(curl -sS --location 'http://127.0.0.1:8231' \
         --header 'Content-Type: application/json' \
         --data "$(
             cat <<EOF
