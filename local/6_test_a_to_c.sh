@@ -24,11 +24,13 @@ response=$(curl -sS --location 'http://127.0.0.1:8233' \
 EOF
     )")
 
-echo "$response" | jq -r '.result'
+# echo "$response" | jq -r '.result'
 invoice_address=$(echo "$response" | jq -r '.result.invoice_address')
 
-curl -sS --location 'http://127.0.0.1:8231' --header 'Content-Type: application/json' --data "$(
-    cat <<EOF
+payment_hash=$(curl -sS --location 'http://127.0.0.1:8231' \
+    --header 'Content-Type: application/json' \
+    --data "$(
+        cat <<EOF
 {
     "id": 2,
     "jsonrpc": "2.0",
@@ -38,4 +40,28 @@ curl -sS --location 'http://127.0.0.1:8231' --header 'Content-Type: application/
     }]
 }
 EOF
-)" | jq -r
+    )" | jq -r '.result.payment_hash')
+
+echo "payment_hash: $payment_hash"
+
+sleep 1
+
+payment_response=$(curl -sS --location 'http://127.0.0.1:8231' \
+    --header 'Content-Type: application/json' \
+    --data "$(
+        cat <<EOF
+{
+    "id": 3,
+    "jsonrpc": "2.0",
+    "method": "get_payment",
+    "params": [
+        {
+            "payment_hash": "$payment_hash"
+        }
+    ]
+}
+EOF
+    )")
+
+status=$(echo "$payment_response" | jq -r '.result.status')
+echo "status: '$status'"

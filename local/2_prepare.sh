@@ -2,16 +2,36 @@
 
 pkill fnn
 
-cd ..
-#rm -rf fiber
-#git clone https://github.com/nervosnetwork/fiber.git
-cd fiber
-#cargo build --release
+arg="$1"
+
+if [ -z "$arg" ]; then
+  if [ ! -f "../fiber/target/release/fnn" ]; then
+    echo "Error: Please input 'develop' or 'find'"
+    exit 1
+  else
+    cd ../fiber
+  fi
+elif [ "$arg" == "develop" ]; then
+  cd ..
+  rm -rf fiber
+  git clone https://github.com/nervosnetwork/fiber.git
+  cd fiber
+  cargo build --release
+elif [ "$arg" == "find" ]; then
+  cd ..
+  rm -rf fiber
+  git clone https://github.com/chenyukang/fiber.git
+  cd fiber
+  git checkout tunning-find-path
+  cargo build --release
+else
+  echo "Error: Unknown parameter '$arg'. Please input 'develop' or 'find'."
+  exit 1
+fi
 
 rm -rf tmp && mkdir tmp && cd tmp
 
 cp ../target/release/fnn .
-
 
 # 节点范围定义
 start_node_id=1
