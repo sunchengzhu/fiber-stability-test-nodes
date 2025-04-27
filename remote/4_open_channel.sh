@@ -142,7 +142,8 @@ TZ=Asia/Shanghai date "+%Y-%m-%d %H:%M:%S"
 current_ip=$(curl -s ifconfig.me)
 
 if [ "$current_ip" == "18.167.71.41" ]; then
-  for i in {0..4}; do
+  # for i in {0..4}; do
+  for i in 0; do
     port="${PORTS[i]}"
     # 默认执行 1 次，只有 i 为 0 时执行 OPEN_CHANNEL_COUNT 次
     repeat_count=1
@@ -175,7 +176,7 @@ elif [ "$current_ip" == "43.199.108.57" ]; then
   curl -sS --location "http://172.31.16.223:$port1" --header "Content-Type: application/json" --data "$json_data1"
   echo ""
   check_channels_ready "$port1" "$f_peer_id"
-  
+
   port2="${PORTS[7]}"
   json_data2=$(printf "$open_channel_g_json_data" "$port2")
   curl -sS --location "http://172.31.16.223:$port2" --header "Content-Type: application/json" --data "$json_data2"
