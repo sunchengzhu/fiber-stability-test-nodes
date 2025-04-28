@@ -16,6 +16,7 @@ elif [ "$arg" == "develop" ]; then
   rm -rf fiber
   git clone https://github.com/nervosnetwork/fiber.git
   cd fiber
+  git checkout e45c01aff0bece34fdb15bf267569ab574e3cb1f
   cargo build --release
 elif [ "$arg" == "find" ]; then
   cd ..
