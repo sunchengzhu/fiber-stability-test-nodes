@@ -62,7 +62,8 @@ EOF
 PORTS=($(seq 8231 8238))
 
 if [ "$current_ip" == "18.167.71.41" ]; then
-  for i in 0 1 2 3 4; do
+  for i in 0; do
+    # for i in 0 1 2 3 4; do
     port="${PORTS[i]}"
     json_data=$(printf "$connect_peer_f_json_data" "$port")
     curl -s --location "http://172.31.23.160:$port" --header "Content-Type: application/json" --data "$json_data"
