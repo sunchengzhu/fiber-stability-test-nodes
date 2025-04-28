@@ -148,10 +148,12 @@ EOF
 curl --location "http://127.0.0.1:$port1" --header "Content-Type: application/json" --data "$json_data12"
 echo ""
 check_channels_ready "$port1" "$peer_id2"
+sleep 30
 
 curl --location "http://127.0.0.1:$port2" --header "Content-Type: application/json" --data "$json_data23"
 echo ""
 check_channels_ready "$port2" "$peer_id3"
+sleep 30
 
 if [ "$1" == "find" ]; then
   curl --location "http://127.0.0.1:$port3" --header "Content-Type: application/json" --data "$json_data32"
