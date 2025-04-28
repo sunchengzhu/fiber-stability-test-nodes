@@ -177,8 +177,8 @@ elif [ "$current_ip" == "43.199.108.57" ]; then
   echo ""
   check_channels_ready "$port1" "$f_peer_id"
 
-  port2="${PORTS[7]}"
-  json_data2=$(printf "$open_channel_g_json_data" "$port2")
-  curl -sS --location "http://172.31.16.223:$port2" --header "Content-Type: application/json" --data "$json_data2"
-  check_channels_ready "$port2" "$g_peer_id"
+#  port2="${PORTS[7]}"
+#  json_data2=$(printf "$open_channel_g_json_data" "$port2")
+#  curl -sS --location "http://172.31.16.223:$port2" --header "Content-Type: application/json" --data "$json_data2"
+#  check_channels_ready "$port2" "$g_peer_id"
 fi
