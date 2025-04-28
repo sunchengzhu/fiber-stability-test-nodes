@@ -55,9 +55,10 @@ for ((id = $start_node_id; id <= $end_node_id; id++)); do
   fiber_port=$((8220 + id))
   rpc_port=$((8230 + id))
 
+  ip="0.0.0.0"
   # 更新配置文件中的端口
-  yq eval ".fiber.listening_addr = \"/ip4/127.0.0.1/tcp/$fiber_port\"" -i "testnet-fnn/node$id/config.yml"
-  yq eval ".rpc.listening_addr = \"127.0.0.1:$rpc_port\"" -i "testnet-fnn/node$id/config.yml"
+  yq eval ".fiber.listening_addr = \"/ip4/$ip/tcp/$fiber_port\"" -i "testnet-fnn/node$id/config.yml"
+  yq eval ".rpc.listening_addr = \"$ip:$rpc_port\"" -i "testnet-fnn/node$id/config.yml"
   # 打印配置情况
   echo "node$id config.yml"
   yq eval '.fiber.listening_addr' "testnet-fnn/node$id/config.yml"
