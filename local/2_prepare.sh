@@ -44,10 +44,11 @@ for ((id = $start_node_id; id <= $end_node_id; id++)); do
   mkdir -p "testnet-fnn/node$id/ckb"
   cp "../config/testnet/config.yml" "testnet-fnn/node$id/config.yml"
   sed -n "${id}p" "../../keys.txt" >"testnet-fnn/node$id/ckb/key"
+  chmod 600 "testnet-fnn/node$id/ckb/key"
 
-  # 检查是否已存在 announce_private_addr
-  if ! yq eval '.fiber.announce_private_addr' "testnet-fnn/node$id/config.yml" | grep -q true; then
-    yq eval '.fiber.announce_private_addr = true' -i "testnet-fnn/node$id/config.yml"
+  # 根据 id 修改配置文件中的地址
+  if [ "$id" -eq 2 ] || [ "$id" -eq 3 ]; then
+    yq eval '.fiber.announce_private_addr = true' -i "testnet-fnn/node${id}/config.yml"
   fi
 
   # 计算端口号
