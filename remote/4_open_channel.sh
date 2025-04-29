@@ -84,6 +84,14 @@ for idx in "${!PORTS[@]}"; do
     ip="43.199.108.57"
   fi
 
+
+  # 临时跳过特定端口，但要在 peer_ids 填充占位
+  if [[ "$PORT" == "8232" || "$PORT" == "8233" || "$PORT" == "8234" || "$PORT" == "8235" || "$PORT" == "8238" ]]; then
+    echo "Skipping port $PORT (temporarily disabled)"
+    peer_ids+=("skip")
+    continue
+  fi
+
   response=$(curl -s -X POST http://"$ip":"$PORT" \
     -H "Content-Type: application/json" \
     -d "$(printf '{
