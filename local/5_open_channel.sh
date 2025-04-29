@@ -155,7 +155,7 @@ echo ""
 check_channels_ready "$port2" "$peer_id3"
 sleep 30
 
-if [ "$1" == "find" ]; then
+if [ "$1" != "debug" ]; then
   curl --location "http://127.0.0.1:$port3" --header "Content-Type: application/json" --data "$json_data32"
   echo ""
   check_channels_ready "$port3" "$peer_id2"
