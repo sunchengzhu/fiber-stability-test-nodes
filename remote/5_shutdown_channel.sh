@@ -123,6 +123,7 @@ elif [ "$current_ip" == "43.199.108.57" ]; then
   if [[ "$channel_id" != "null" && -n "$channel_id" ]]; then
     curl -sS --location "http://$current_ip:$port" --header "Content-Type: application/json" --data "$shutdown_channel_json_data"
   fi
+  echo ""
 
 #  port="${PORTS[7]}"
 #  json_data=$(printf "$list_channels_g_json_data" "$port")
