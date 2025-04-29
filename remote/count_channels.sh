@@ -91,7 +91,7 @@ elif [ "$current_ip" == "43.199.108.57" ]; then
   curl -sS --location "http://127.0.0.1:$port1" --header "Content-Type: application/json" --data "$json_data1" | jq -r "$jq_filter"
   echo ""
 
-  port2="${PORTS[7]}"
-  json_data2=$(printf "$list_channels_g_json_data" "$port2")
-  curl -sS --location "http://127.0.0.1:$port2" --header "Content-Type: application/json" --data "$json_data2" | jq -r "$jq_filter"
+#  port2="${PORTS[7]}"
+#  json_data2=$(printf "$list_channels_g_json_data" "$port2")
+#  curl -sS --location "http://127.0.0.1:$port2" --header "Content-Type: application/json" --data "$json_data2" | jq -r "$jq_filter"
 fi
