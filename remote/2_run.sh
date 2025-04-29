@@ -10,7 +10,7 @@ case "$IP" in
 "18.167.71.41")
   # 删除除 node1 到 node5 以外的节点 (即删除 node6, node7, node8)
 #  rm -rf ../fiber/testnet-fnn/node{6..8}
-   rm -rf ../fiber/testnet-nn/node{2..8}
+   rm -rf ../fiber/testnet-fnn/node{2..8}
   ;;
 "43.198.254.225")
   # 删除除 node6 外的节点 (即删除 node1 到 node5 和 node7 到 node8)
