@@ -117,12 +117,13 @@ elif [ "$current_ip" == "43.198.254.225" ]; then
     # 为每个channel ID执行关闭操作
     for channel_id in $channel_ids; do
       if [[ "$channel_id" != "null" && -n "$channel_id" ]]; then
-        echo "S$channel_id"
+        echo "$channel_id"
         shutdown_channel_json_data=$(printf "$shutdown_channel_json_template" "$port" "$channel_id" "$args")
         curl -sS --location "http://$current_ip:$port" \
           --header "Content-Type: application/json" \
           --data "$shutdown_channel_json_data"
       fi
+      echo ""
     done
   else
     echo "No channels found to shutdown."
