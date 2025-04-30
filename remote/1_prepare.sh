@@ -7,7 +7,7 @@ rm -rf fiber && mkdir fiber && cd fiber
 if [ "$1" == "develop" ]; then
   download_url="http://github-test-logs.ckbapp.dev/fiber/fnn_develop_20250418_1447-x86_64-linux-portable.tar.gz"
 elif [ "$1" == "find" ]; then
-  download_url="http://github-test-logs.ckbapp.dev/fiber/fnn_tunning-find-path_20250429_1506-x86_64-linux-portable.tar.gz"
+  download_url="http://github-test-logs.ckbapp.dev/fiber/fnn_tunning-find-path_20250430_1656-x86_64-linux-portable.tar.gz"
 elif [ -z "$1" ] || [ "$1" == "latest" ]; then
   download_url=$(curl -s https://api.github.com/repos/nervosnetwork/fiber/releases |
     jq -r '.[0].assets[] | select(.name | endswith("linux-portable.tar.gz")) | .browser_download_url')
