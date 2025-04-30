@@ -13,6 +13,12 @@ for idx in "${!PORTS[@]}"; do
     ip="43.199.108.57"
   fi
 
+  # 临时跳过特定端口，但要在 peer_ids 填充占位
+  if [[ "$PORT" == "8232" || "$PORT" == "8233" || "$PORT" == "8234" || "$PORT" == "8235" || "$PORT" == "8238" ]]; then
+    peer_ids+=("skip")
+    continue
+  fi
+
   response=$(curl -s -X POST "http://$ip:$PORT" \
     -H "Content-Type: application/json" \
     -d '{
@@ -65,7 +71,8 @@ EOF
 )
 
 if [ "$current_ip" == "18.167.71.41" ]; then
-  for i in 0 1 2 3 4; do
+  for i in 0; do
+    # for i in 0 1 2 3 4; do
     port="${PORTS[i]}"
     json_data=$(printf "$list_channels_f_json_data" "$port")
     curl -sS --location "http://127.0.0.1:$port" --header "Content-Type: application/json" --data "$json_data" | jq -r
@@ -82,7 +89,7 @@ elif [ "$current_ip" == "43.199.108.57" ]; then
   curl -sS --location "http://127.0.0.1:$port1" --header "Content-Type: application/json" --data "$json_data1" | jq -r
   echo ""
 
-  port2="${PORTS[7]}"
-  json_data2=$(printf "$list_channels_g_json_data" "$port2")
-  curl -sS --location "http://127.0.0.1:$port2" --header "Content-Type: application/json" --data "$json_data2" | jq -r
+  # port2="${PORTS[7]}"
+  # json_data2=$(printf "$list_channels_g_json_data" "$port2")
+  # curl -sS --location "http://127.0.0.1:$port2" --header "Content-Type: application/json" --data "$json_data2" | jq -r
 fi
