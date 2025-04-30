@@ -88,8 +88,8 @@ shutdown_channel_json_template='{
 }'
 
 if [ "$current_ip" == "18.167.71.41" ]; then
-#  for i in 0 1 2 3 4; do
-  for i in 0 ; do
+  #  for i in 0 1 2 3 4; do
+  for i in 0; do
     port="${PORTS[i]}"
     json_data=$(printf "$list_channels_f_json_data" "$port")
     channel_id=$(curl -sS --location "http://$current_ip:$port" --header "Content-Type: application/json" --data "$json_data" | jq -r '.result.channels[0].channel_id')
@@ -104,26 +104,42 @@ if [ "$current_ip" == "18.167.71.41" ]; then
 elif [ "$current_ip" == "43.198.254.225" ]; then
   port="${PORTS[5]}"
   json_data=$(printf "$list_channels_g_json_data" "$port")
-  channel_id=$(curl -sS --location "http://$current_ip:$port" --header "Content-Type: application/json" --data "$json_data" | jq -r '.result.channels[0].channel_id')
-  echo "$channel_id"
-  echo ""
-  args=$(sed -n "$((5 + 1))p" ../args.txt)
-  shutdown_channel_json_data=$(printf "$shutdown_channel_json_template" "$port" "$channel_id" "$args")
-  if [[ "$channel_id" != "null" && -n "$channel_id" ]]; then
-    curl -sS --location "http://$current_ip:$port" --header "Content-Type: application/json" --data "$shutdown_channel_json_data"
+  # 获取所有channel IDs
+  channel_ids=$(curl -sS --location "http://$current_ip:$port" \
+    --header "Content-Type: application/json" \
+    --data "$json_data" | jq -r '.result.channels[].channel_id')
+
+  # 检查是否有有效的channel IDs
+  if [[ -n "$channel_ids" ]]; then
+    # 读取额外的参数
+    args=$(sed -n "$((5 + 1))p" ../args.txt)
+
+    # 为每个channel ID执行关闭操作
+    for channel_id in $channel_ids; do
+      if [[ "$channel_id" != "null" && -n "$channel_id" ]]; then
+        echo "S$channel_id"
+        shutdown_channel_json_data=$(printf "$shutdown_channel_json_template" "$port" "$channel_id" "$args")
+        curl -sS --location "http://$current_ip:$port" \
+          --header "Content-Type: application/json" \
+          --data "$shutdown_channel_json_data"
+      fi
+    done
+  else
+    echo "No channels found to shutdown."
   fi
-elif [ "$current_ip" == "43.199.108.57" ]; then
-  port="${PORTS[6]}"
-  json_data=$(printf "$list_channels_f_json_data" "$port")
-  channel_id=$(curl -sS --location "http://$current_ip:$port" --header "Content-Type: application/json" --data "$json_data" | jq -r '.result.channels[0].channel_id')
-  echo "$channel_id"
-  echo ""
-  args=$(sed -n "$((6 + 1))p" ../args.txt)
-  shutdown_channel_json_data=$(printf "$shutdown_channel_json_template" "$port" "$channel_id" "$args")
-  if [[ "$channel_id" != "null" && -n "$channel_id" ]]; then
-    curl -sS --location "http://$current_ip:$port" --header "Content-Type: application/json" --data "$shutdown_channel_json_data"
-  fi
-  echo ""
+
+# elif [ "$current_ip" == "43.199.108.57" ]; then
+#   port="${PORTS[6]}"
+#   json_data=$(printf "$list_channels_f_json_data" "$port")
+#   channel_id=$(curl -sS --location "http://$current_ip:$port" --header "Content-Type: application/json" --data "$json_data" | jq -r '.result.channels[0].channel_id')
+#   echo "$channel_id"
+#   echo ""
+#   args=$(sed -n "$((6 + 1))p" ../args.txt)
+#   shutdown_channel_json_data=$(printf "$shutdown_channel_json_template" "$port" "$channel_id" "$args")
+#   if [[ "$channel_id" != "null" && -n "$channel_id" ]]; then
+#     curl -sS --location "http://$current_ip:$port" --header "Content-Type: application/json" --data "$shutdown_channel_json_data"
+#   fi
+#   echo ""
 
 #  port="${PORTS[7]}"
 #  json_data=$(printf "$list_channels_g_json_data" "$port")
