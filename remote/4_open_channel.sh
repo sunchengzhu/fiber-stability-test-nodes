@@ -178,12 +178,12 @@ elif [ "$current_ip" == "43.198.254.225" ]; then
     echo ""
     check_channels_ready "$port" "$g_peer_id"
   done
-elif [ "$current_ip" == "43.199.108.57" ]; then
-  port1="${PORTS[6]}"
-  json_data1=$(printf "$open_channel_f_json_data" "$port1")
-  curl -sS --location "http://172.31.16.223:$port1" --header "Content-Type: application/json" --data "$json_data1"
-  echo ""
-  check_channels_ready "$port1" "$f_peer_id"
+#elif [ "$current_ip" == "43.199.108.57" ]; then
+#  port1="${PORTS[6]}"
+#  json_data1=$(printf "$open_channel_f_json_data" "$port1")
+#  curl -sS --location "http://172.31.16.223:$port1" --header "Content-Type: application/json" --data "$json_data1"
+#  echo ""
+#  check_channels_ready "$port1" "$f_peer_id"
 
 #  port2="${PORTS[7]}"
 #  json_data2=$(printf "$open_channel_g_json_data" "$port2")
