@@ -37,7 +37,7 @@ for ((id = $start_node_id; id <= $end_node_id; id++)); do
   rpc_port=$((8230 + id))
 
   if [ "$id" -eq 1 ]; then
-    yq -i '.fiber."standalone-watchtower-rpc-url" = "18.167.71.41:8231"' config.yaml
+    yq -i '.fiber."standalone-watchtower-rpc-url" = "16.162.235.63:8231"' config.yaml
   fi
 
   # 根据 id 修改配置文件中的地址
