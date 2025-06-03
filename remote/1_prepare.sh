@@ -8,6 +8,8 @@ if [ "$1" == "develop" ]; then
   download_url="http://github-test-logs.ckbapp.dev/fiber/fnn_develop_20250504_0038-x86_64-linux-portable.tar.gz"
 elif [ "$1" == "find" ]; then
   download_url="http://github-test-logs.ckbapp.dev/fiber/fnn_tunning-find-path_20250506_1937-x86_64-linux-portable.tar.gz"
+elif [ "$1" == "watchtower" ]; then
+  download_url="http://github-test-logs.ckbapp.dev/fiber/fnn_watchtower_20250603_1741-x86_64-linux-portable.tar.gz"
 elif [ -z "$1" ] || [ "$1" == "latest" ]; then
   download_url=$(curl -s https://api.github.com/repos/nervosnetwork/fiber/releases |
     jq -r '.[0].assets[] | select(.name | endswith("linux-portable.tar.gz")) | .browser_download_url')
@@ -33,6 +35,10 @@ for ((id = $start_node_id; id <= $end_node_id; id++)); do
   # 计算端口号
   fiber_port=$((8220 + id))
   rpc_port=$((8230 + id))
+
+  if [ "$id" -eq 1 ]; then
+    yq -i '.fiber."standalone-watchtower-rpc-url" = "18.167.71.41:8231"' config.yaml
+  fi
 
   # 根据 id 修改配置文件中的地址
   if [ "$id" -eq 6 ] || [ "$id" -eq 7 ]; then
