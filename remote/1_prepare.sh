@@ -38,6 +38,7 @@ for ((id = $start_node_id; id <= $end_node_id; id++)); do
 
   if [ "$id" -eq 1 ]; then
     yq -i '.fiber."standalone-watchtower-rpc-url" = "16.162.235.63:8231"' config.yml
+    yq -i '.fiber.disable_built_in_watchtower = true' config.yml
   fi
 
   # 根据 id 修改配置文件中的地址
