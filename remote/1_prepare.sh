@@ -39,7 +39,7 @@ for ((id = $start_node_id; id <= $end_node_id; id++)); do
   if [ "$id" -eq 1 ]; then
     yq -i '.fiber."standalone-watchtower-rpc-url" = "16.162.235.63:8231"' "testnet-fnn/node${id}/config.yml"
     yq -i '.fiber.disable_built_in_watchtower = true' "testnet-fnn/node${id}/config.yml"
-    yq -i '.rpc.enabled_modules = ["watchtower"]' "testnet-fnn/node${id}/config.yml"
+#    yq -i '.rpc.enabled_modules = ["watchtower"]' "testnet-fnn/node${id}/config.yml"
   fi
 
   # 根据 id 修改配置文件中的地址
