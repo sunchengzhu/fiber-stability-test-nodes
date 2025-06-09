@@ -37,7 +37,7 @@ for ((id = $start_node_id; id <= $end_node_id; id++)); do
   rpc_port=$((8230 + id))
 
   if [ "$id" -eq 1 ]; then
-    yq -i '.fiber."standalone_watchtower_rpc_url" = "16.162.235.63:8227"' "testnet-fnn/node${id}/config.yml"
+    yq -i '.fiber."standalone_watchtower_rpc_url" = "http://16.162.235.63:8227"' "testnet-fnn/node${id}/config.yml"
     yq -i '.fiber.disable_built_in_watchtower = true' "testnet-fnn/node${id}/config.yml"
 #    yq -i '.rpc.enabled_modules = ["watchtower"]' "testnet-fnn/node${id}/config.yml"
     grep -E 'standalone_watchtower_rpc_url|disable_built_in_watchtower' "testnet-fnn/node${id}/config.yml"
