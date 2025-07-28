@@ -17,7 +17,7 @@ for idx in "${!INTERNAL_PORTS[@]}"; do
           "params": []
         }')
 
-  address=$(echo "$response" | jq -r '.result.addresses[]' | sed "s/0.0.0.0/$IP/")
+  address=$(echo "$response" | jq -r '.result.addresses[]' | sed "s/0.0.0.0/$IP/" | grep -v "/ws/" | head -n 1)
   addresses+=("$address")
 done
 
