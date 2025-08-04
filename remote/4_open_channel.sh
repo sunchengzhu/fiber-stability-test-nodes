@@ -16,12 +16,13 @@ fi
 check_channels_ready() {
   local port=$1
   local peer_id=$2
+  local local_ip=$3
   local start_time=$(date +%s)
   local timeout=180
 
   while true; do
     # 直接在 curl 请求中构造 JSON 数据
-    local states=$(curl -sS --location "http://127.0.0.1:$port" \
+    local states=$(curl -sS --location "http://$local_ip:$port" \
       --header "Content-Type: application/json" \
       -d "{
         \"id\": \"1\",
@@ -163,7 +164,7 @@ if [ "$current_ip" == "18.167.71.41" ]; then
     for ((j = 1; j <= repeat_count; j++)); do
       curl -sS --location "http://172.31.23.160:$port" --header "Content-Type: application/json" --data "$json_data"
       echo ""
-      check_channels_ready "$port" "$f_peer_id"
+      check_channels_ready "$port" "$f_peer_id" "172.31.23.160"
     done
   done
   # for i in {0..4}; do
@@ -176,7 +177,7 @@ elif [ "$current_ip" == "43.198.254.225" ]; then
   for ((j = 1; j <= OPEN_CHANNEL_COUNT; j++)); do
     curl -sS --location "http://172.31.28.209:$port" --header "Content-Type: application/json" --data "$json_data"
     echo ""
-    check_channels_ready "$port" "$g_peer_id"
+    check_channels_ready "$port" "$g_peer_id" "172.31.28.209"
   done
 #elif [ "$current_ip" == "43.199.108.57" ]; then
 #  port1="${PORTS[6]}"
