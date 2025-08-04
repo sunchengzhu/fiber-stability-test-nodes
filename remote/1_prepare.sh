@@ -40,7 +40,7 @@ for ((id = $start_node_id; id <= $end_node_id; id++)); do
   fiber_port=$((8220 + id))
   rpc_port=$((8230 + id))
 
-  if [ "$id" -eq 1 ]; then
+  if [ "$1" == "watchtower" ] && [ "$id" -eq 1 ]; then
     yq -i '.fiber."standalone_watchtower_rpc_url" = "http://172.31.22.167:8227"' "testnet-fnn/node${id}/config.yml"
     yq -i '.fiber.disable_built_in_watchtower = true' "testnet-fnn/node${id}/config.yml"
 #    yq -i '.rpc.enabled_modules = ["watchtower"]' "testnet-fnn/node${id}/config.yml"
@@ -52,7 +52,7 @@ for ((id = $start_node_id; id <= $end_node_id; id++)); do
   if [ "$id" -eq 6 ] || [ "$id" -eq 7 ]; then
     yq eval '.fiber.announce_private_addr = true' -i "testnet-fnn/node${id}/config.yml"
   fi
-  ip="0.0.0.0"
+  ip="127.0.0.1"
 
   # 更新配置文件中的地址
   yq eval ".fiber.listening_addr = \"/ip4/$ip/tcp/$fiber_port\"" -i "testnet-fnn/node$id/config.yml"
