@@ -30,7 +30,7 @@ EOF
 
     invoice_address=$(echo "$response" | jq -r '.result.invoice_address')
 
-    payment_hash=$(curl -sS --location 'http://127.0.0.1:8231' \
+    payment_hash=$(curl -sS --location 'http://172.31.23.160:8231' \
         --header 'Content-Type: application/json' \
         --data "$(
             cat <<EOF
@@ -48,7 +48,7 @@ EOF
     echo "payment_hash: $payment_hash"
     sleep 3
 
-    payment_response=$(curl -sS --location 'http://127.0.0.1:8231' \
+    payment_response=$(curl -sS --location 'http://172.31.23.160:8231' \
         --header 'Content-Type: application/json' \
         --data "$(
             cat <<EOF
