@@ -55,7 +55,7 @@ for ((id = $start_node_id; id <= $end_node_id; id++)); do
 
   if [ "$id" -eq 6 ]; then
     ip="172.31.28.209"
-  elif [ "$id" -eq 7 ]; then
+  elif [ "$id" -eq 7 ] || [ "$id" -eq 8 ]; then
     ip="172.31.16.223"
   else
     ip="172.31.23.160"
