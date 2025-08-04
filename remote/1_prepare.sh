@@ -52,7 +52,14 @@ for ((id = $start_node_id; id <= $end_node_id; id++)); do
   if [ "$id" -eq 6 ] || [ "$id" -eq 7 ]; then
     yq eval '.fiber.announce_private_addr = true' -i "testnet-fnn/node${id}/config.yml"
   fi
-  ip="127.0.0.1"
+
+  if [ "$id" -eq 6 ]; then
+    ip="172.31.28.209"
+  elif [ "$id" -eq 7 ]; then
+    ip="172.31.16.223"
+  else
+    ip="172.31.23.160"
+  fi
 
   # 更新配置文件中的地址
   yq eval ".fiber.listening_addr = \"/ip4/$ip/tcp/$fiber_port\"" -i "testnet-fnn/node$id/config.yml"
