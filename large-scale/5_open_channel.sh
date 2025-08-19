@@ -127,7 +127,7 @@ elif [ "$current_ip" == "43.199.108.57" ]; then
   port="${PORTS[6]}"
   json_data=$(printf "$open_channel_39_json_data" "$port")
   for ((j = 1; j <= OPEN_CHANNEL_COUNT; j++)); do
-    curl -sS --location "http://172.31.28.209:$port" --header "Content-Type: application/json" --data "$json_data"
+    curl -sS --location "http://172.31.16.223:$port" --header "Content-Type: application/json" --data "$json_data"
     echo ""
     check_channels_ready "$port" "$edge_39_peer_id" "172.31.16.223"
   done
