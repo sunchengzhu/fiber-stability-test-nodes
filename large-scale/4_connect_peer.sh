@@ -49,7 +49,7 @@ if [ "$current_ip" == "18.167.71.41" ]; then
 elif [ "$current_ip" == "43.199.108.57" ]; then
   # g → edge_39
   port="${PORTS[6]}"
-  json_data=$(printf "$connect_peer_f_json_data" "$port1")
-  curl -s --location "http://172.31.16.223:$port1" --header "Content-Type: application/json" --data "$json_data1"
+  json_data=$(printf "$connect_peer_39_json_data" "$port")
+  curl -s --location "http://172.31.16.223:$port" --header "Content-Type: application/json" --data "$json_data"
   echo ""
 fi
