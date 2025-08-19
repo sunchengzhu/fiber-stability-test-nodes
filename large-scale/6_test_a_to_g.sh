@@ -28,8 +28,6 @@ while true; do
 EOF
         )")
 
-    echo "$response"
-
     invoice_address=$(echo "$response" | jq -r '.result.invoice_address')
 
     payment_hash=$(curl -sS --location 'http://172.31.23.160:8231' \
@@ -45,42 +43,42 @@ EOF
     }]
 }
 EOF
-        )" | jq -r '.result.payment_hash')
+        )" | jq -r '.result')
 
     echo "payment_hash: $payment_hash"
     sleep 3
 
-    payment_response=$(curl -sS --location 'http://172.31.23.160:8231' \
-        --header 'Content-Type: application/json' \
-        --data "$(
-            cat <<EOF
-{
-    "id": 3,
-    "jsonrpc": "2.0",
-    "method": "get_payment",
-    "params": [
-        {
-            "payment_hash": "$payment_hash"
-        }
-    ]
-}
-EOF
-        )")
-
-    status=$(echo "$payment_response" | jq -r '.result.status')
-    echo "status: '$status'"
-
-    if [ "$status" = "Success" ]; then
-        elapsed=$(($(date +%s) - start_time))
-        echo "Channels is ready after ${elapsed} seconds"
-        break
-    fi
-
-    elapsed=$(($(date +%s) - start_time))
-    if [ "$elapsed" -ge "$timeout" ]; then
-        echo "超时：等待channel可用时间超过10分钟" >&2
-        exit 1
-    fi
-
-    sleep 5
+#    payment_response=$(curl -sS --location 'http://172.31.23.160:8231' \
+#        --header 'Content-Type: application/json' \
+#        --data "$(
+#            cat <<EOF
+#{
+#    "id": 3,
+#    "jsonrpc": "2.0",
+#    "method": "get_payment",
+#    "params": [
+#        {
+#            "payment_hash": "$payment_hash"
+#        }
+#    ]
+#}
+#EOF
+#        )")
+#
+#    status=$(echo "$payment_response" | jq -r '.result.status')
+#    echo "status: '$status'"
+#
+#    if [ "$status" = "Success" ]; then
+#        elapsed=$(($(date +%s) - start_time))
+#        echo "Channels is ready after ${elapsed} seconds"
+#        break
+#    fi
+#
+#    elapsed=$(($(date +%s) - start_time))
+#    if [ "$elapsed" -ge "$timeout" ]; then
+#        echo "超时：等待channel可用时间超过10分钟" >&2
+#        exit 1
+#    fi
+#
+#    sleep 5
 done
