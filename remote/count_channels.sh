@@ -77,18 +77,18 @@ if [ "$current_ip" == "18.167.71.41" ]; then
 #  for i in 0 1 2 3 4; do
     port="${PORTS[i]}"
     json_data=$(printf "$list_channels_f_json_data" "$port")
-    curl -sS --location "http://127.0.0.1:$port" --header "Content-Type: application/json" --data "$json_data" | jq -r "$jq_filter"
+    curl -sS --location "http://172.31.23.160:$port" --header "Content-Type: application/json" --data "$json_data" | jq -r "$jq_filter"
     echo ""
   done
 elif [ "$current_ip" == "43.198.254.225" ]; then
   port="${PORTS[5]}"
   json_data=$(printf "$list_channels_g_json_data" "$port")
-  curl -sS --location "http://127.0.0.1:$port" --header "Content-Type: application/json" --data "$json_data" | jq -r "$jq_filter"
+  curl -sS --location "http://172.31.28.209:$port" --header "Content-Type: application/json" --data "$json_data" | jq -r "$jq_filter"
   echo ""
 elif [ "$current_ip" == "43.199.108.57" ]; then
   port1="${PORTS[6]}"
   json_data1=$(printf "$list_channels_f_json_data" "$port1")
-  curl -sS --location "http://127.0.0.1:$port1" --header "Content-Type: application/json" --data "$json_data1" | jq -r "$jq_filter"
+  curl -sS --location "http://172.31.16.223:$port1" --header "Content-Type: application/json" --data "$json_data1" | jq -r "$jq_filter"
   echo ""
 
 #  port2="${PORTS[7]}"
