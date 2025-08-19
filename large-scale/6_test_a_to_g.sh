@@ -28,6 +28,8 @@ while true; do
 EOF
         )")
 
+    echo "$response"
+
     invoice_address=$(echo "$response" | jq -r '.result.invoice_address')
 
     payment_hash=$(curl -sS --location 'http://172.31.23.160:8231' \
