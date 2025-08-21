@@ -1,7 +1,7 @@
 #!/bin/bash
 
-edge_0_address="/ip4/35.170.253.64/tcp/8120/p2p/QmUf2ZSuGGBgFQEupTAAjGQbrhcRNoUXKwbHTdVMTGdEg3"
-edge_39_address="/ip4/3.224.56.150/tcp/8158/p2p/QmZEGQRyDfzAMUdV7QnncgdDZqkaiTy3fKvrvNd7hCBgEm"
+edge_0_address="/ip4/34.210.173.151/tcp/8120/p2p/QmfJqF7hGRvYnm3q9Tsx61poS39JpfAuFik5AMC9Aqg9sr"
+edge_39_address="/ip4/34.210.173.151/tcp/8122/p2p/Qma2PNg4qdPchSXqusPyEL2ttEtjRmn3BNoeabquFSWBcz"
 echo "edge_0_address: $edge_0_address"
 echo "edge_39_address: $edge_39_address"
 

@@ -74,8 +74,8 @@ check_channels_ready() {
 
 PORTS=($(seq 8231 8238))
 
-edge_0_peer_id="QmUf2ZSuGGBgFQEupTAAjGQbrhcRNoUXKwbHTdVMTGdEg3"
-edge_39_peer_id="QmZEGQRyDfzAMUdV7QnncgdDZqkaiTy3fKvrvNd7hCBgEm"
+edge_0_peer_id="QmfJqF7hGRvYnm3q9Tsx61poS39JpfAuFik5AMC9Aqg9sr"
+edge_39_peer_id="Qma2PNg4qdPchSXqusPyEL2ttEtjRmn3BNoeabquFSWBcz"
 
 open_channel_0_json_data=$(
   cat <<EOF
