@@ -1,0 +1,54 @@
+services:
+  fiber-node1:
+    build: .
+    container_name: fiber-node1
+    restart: unless-stopped
+    environment:
+      - FIBER_SECRET_KEY_PASSWORD=123
+      - RUST_LOG=info
+    volumes:
+      - ./node1/config.yml:/app/config.yml:ro
+      - ./node1/key:/app/node/ckb/key
+      - ./node1/test_1_to_2.sh:/app/test_1_to_2.sh
+      - ./node1/test_1_to_3.sh:/app/test_1_to_3.sh
+    networks:
+      fiber_net:
+        ipv4_address: 172.30.0.1
+
+  fiber-node2:
+    build: .
+    container_name: fiber-node2
+    restart: unless-stopped
+    environment:
+      - FIBER_SECRET_KEY_PASSWORD=123
+      - RUST_LOG=info
+    volumes:
+      - ./node2/config.yml:/app/config.yml:ro
+      - ./node2/key:/app/node/ckb/key
+    tmpfs:
+      - /app/node:rw,size=200m
+    networks:
+      fiber_net:
+        ipv4_address: 172.30.0.2
+
+  fiber-node3:
+    build: .
+    container_name: fiber-node3
+    restart: unless-stopped
+    environment:
+      - FIBER_SECRET_KEY_PASSWORD=123
+      - RUST_LOG=info
+    volumes:
+      - ./node3/config.yml:/app/config.yml:ro
+      - ./node3/key:/app/node/ckb/key
+    networks:
+      fiber_net:
+        ipv4_address: 172.30.0.3
+
+networks:
+  fiber_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.30.0.0/24
+          gateway: 172.30.0.254

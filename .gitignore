@@ -15,3 +15,5 @@ gradle
 # Gradle Wrapper files (if not using Gradle Wrapper)
 /gradlew
 /gradlew.bat
+
+docker/fnn
