@@ -45,6 +45,16 @@ services:
       fiber_net:
         ipv4_address: 172.30.0.3
 
+  test:
+    build: ./test
+    container_name: test
+    depends_on:
+      fiber-node2:
+        condition: service_started
+    networks:
+      - fiber_net
+    restart: "no"
+
 networks:
   fiber_net:
     driver: bridge

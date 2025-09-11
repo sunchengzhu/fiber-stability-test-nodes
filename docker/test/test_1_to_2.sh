@@ -50,8 +50,7 @@ EOF
 EOF
             )" | jq -r '.result.payment_hash')
 
-        echo "payment_hash: $payment_hash"
-        sleep 1
+        sleep 2
 
         payment_response=$(curl -sS --location 'http://172.30.0.1:8231' \
             --header "Authorization: Bearer $AUTH_TOKEN" \
@@ -72,17 +71,19 @@ EOF
             )")
 
         status=$(echo "$payment_response" | jq -r '.result.status')
-        echo "status: '$status'"
+        if [ "$status" != "Success" ]; then
+            echo "status: '$status'"
+        fi
 
         if [ "$status" = "Success" ]; then
             elapsed=$(($(date +%s) - start_time))
-            echo "Channels is ready after ${elapsed} seconds"
+            echo "Payment SUCCESS in ${elapsed}s | payment_hash=${payment_hash}"
             break   # 跳出内层循环，重新开始下一轮
         fi
 
         elapsed=$(($(date +%s) - start_time))
         if [ "$elapsed" -ge "$timeout" ]; then
-            echo "Timeout: waiting for channel availability exceeded 10 minutes" >&2
+            echo "Timeout: payment not successful within ${timeout}s" >&2
             exit 1  # 保持原状，超时退出整个脚本
         fi
 
