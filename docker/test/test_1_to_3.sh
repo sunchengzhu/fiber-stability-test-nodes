@@ -1,6 +1,6 @@
 #!/bin/bash
 
-AUTH_TOKEN="EpECCqYBCgVwZWVycwoIcGF5bWVudHMKCGNoYW5uZWxzCghpbnZvaWNlcxgDIgkKBwgAEgMYgAgiCQoHCAESAxiACCIJCgcIARIDGIEIIgkKBwgAEgMYgQgiCQoHCAESAxiCCCIJCgcIABIDGIIIIggKBggAEgIYGCIJCgcIARIDGIMIMiYKJAoCCBsSBggFEgIIBRoWCgQKAggFCggKBiCAwODoBgoEGgIIAhIkCAASIC3KNA3sQcH7HueRbBDT-Kg9Lmu5LwcEy-OMKcCvtVqRGkCg8T6TWf9HIT5nOfBjB0gelDJMwpIjM9utyJQ9JI3m3L5Sll2AJIPNajGsBy0Ywmkx0Z5VFT3n1SlHuWMM_wMFIiIKIMnzUSJrPnRIaFZYVjxVJu64vI-Oi81uftHSZWcuCZUQ"
+TOKEN="EpECCqYBCgVwZWVycwoIcGF5bWVudHMKCGNoYW5uZWxzCghpbnZvaWNlcxgDIgkKBwgAEgMYgAgiCQoHCAESAxiACCIJCgcIARIDGIEIIgkKBwgAEgMYgQgiCQoHCAESAxiCCCIJCgcIABIDGIIIIggKBggAEgIYGCIJCgcIARIDGIMIMiYKJAoCCBsSBggFEgIIBRoWCgQKAggFCggKBiCAwODoBgoEGgIIAhIkCAASIC3KNA3sQcH7HueRbBDT-Kg9Lmu5LwcEy-OMKcCvtVqRGkCg8T6TWf9HIT5nOfBjB0gelDJMwpIjM9utyJQ9JI3m3L5Sll2AJIPNajGsBy0Ywmkx0Z5VFT3n1SlHuWMM_wMFIiIKIMnzUSJrPnRIaFZYVjxVJu64vI-Oi81uftHSZWcuCZUQ"
 timeout=600
 
 start_time=$(date +%s)
@@ -10,7 +10,7 @@ while true; do
 
     # 0.01 CKB
     response=$(curl -sS --location 'http://172.30.0.3:8233' \
-        --header "Authorization: Bearer $AUTH_TOKEN" \
+        --header "Authorization: Bearer $TOKEN" \
         --header 'Content-Type: application/json' \
         --data "$(
             cat <<EOF
@@ -34,7 +34,7 @@ EOF
     invoice_address=$(echo "$response" | jq -r '.result.invoice_address')
 
     payment_hash=$(curl -sS --location 'http://172.30.0.1:8231' \
-        --header "Authorization: Bearer $AUTH_TOKEN" \
+        --header "Authorization: Bearer $TOKEN" \
         --header 'Content-Type: application/json' \
         --data "$(
             cat <<EOF
@@ -53,7 +53,7 @@ EOF
     sleep 1
 
     payment_response=$(curl -sS --location 'http://172.30.0.1:8231' \
-        --header "Authorization: Bearer $AUTH_TOKEN" \
+        --header "Authorization: Bearer $TOKEN" \
         --header 'Content-Type: application/json' \
         --data "$(
             cat <<EOF
