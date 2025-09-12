@@ -4,23 +4,30 @@ set -eu
 BASE_URL="http://172.30.0.1:8231"
 TOKEN='EpECCqYBCgVwZWVycwoIcGF5bWVudHMKCGNoYW5uZWxzCghpbnZvaWNlcxgDIgkKBwgAEgMYgAgiCQoHCAESAxiACCIJCgcIARIDGIEIIgkKBwgAEgMYgQgiCQoHCAESAxiCCCIJCgcIABIDGIIIIggKBggAEgIYGCIJCgcIARIDGIMIMiYKJAoCCBsSBggFEgIIBRoWCgQKAggFCggKBiCAwODoBgoEGgIIAhIkCAASIC3KNA3sQcH7HueRbBDT-Kg9Lmu5LwcEy-OMKcCvtVqRGkCg8T6TWf9HIT5nOfBjB0gelDJMwpIjM9utyJQ9JI3m3L5Sll2AJIPNajGsBy0Ywmkx0Z5VFT3n1SlHuWMM_wMFIiIKIMnzUSJrPnRIaFZYVjxVJu64vI-Oi81uftHSZWcuCZUQ'
 
-# 1) 列出 channel_id（可能为空）
-CHANNEL_IDS=$(
-	curl -sS --location "$BASE_URL" \
-		--header "Content-Type: application/json" \
-		--header "Authorization: Bearer $TOKEN" \
-		--data '{
-      "id": "1",
-      "jsonrpc": "2.0",
-      "method": "list_channels",
-      "params": [{"peer_id":"QmWECEVkMvn4j9gkMpWLFZw3aqNVVXzzgQ742JpfBDz8KW"}]
-    }' |
-		jq -r '.result.channels[]?.channel_id' || true
-)
+PEER_IDS="QmWECEVkMvn4j9gkMpWLFZw3aqNVVXzzgQ742JpfBDz8KW QmZPivdNrYkLowXCSTZtbba1kgqfgUWBsHo4AX3PoqJmnL"
 
-[ -z "$CHANNEL_IDS" ] && {
-	echo "No channels found to shutdown."
-	exit 0
+CHANNEL_IDS=""
+
+for peer in $PEER_IDS; do
+  ids=$(
+    jq -n --arg peer "$peer" '{
+      id: "1",
+      jsonrpc: "2.0",
+      method: "list_channels",
+      params: [{peer_id: $peer}]
+    }' |
+      curl -sS --location "$BASE_URL" \
+        --header "Content-Type: application/json" \
+        --header "Authorization: Bearer $TOKEN" \
+        --data @- |
+      jq -r '.result.channels[]?.channel_id' || true
+  )
+  CHANNEL_IDS="$CHANNEL_IDS $ids"
+done
+
+[ -z "$(printf %s "$CHANNEL_IDS" | xargs)" ] && {
+  echo "No channels found to shutdown."
+  exit 0
 }
 
 # 2) 逐个关闭
@@ -30,7 +37,7 @@ for cid in $CHANNEL_IDS; do
   i=$((i + 1))
   printf 'shutdown channel %d: %s\n' "$i" "$cid"
 
-  payload=$(jq -n --arg cid "$cid" '{
+  jq -n --arg cid "$cid" '{
     id: "2",
     jsonrpc: "2.0",
     method: "shutdown_channel",
@@ -43,11 +50,10 @@ for cid in $CHANNEL_IDS; do
       },
       fee_rate: "0x3FC"
     }]
-  }')
-
-  curl -sS --location "$BASE_URL" \
-    --header "Content-Type: application/json" \
-    --header "Authorization: Bearer $TOKEN" \
-    --data "$payload" | jq -C .
+  }' |
+    curl -sS --location "$BASE_URL" \
+      --header "Content-Type: application/json" \
+      --header "Authorization: Bearer $TOKEN" \
+      --data @- | jq -C .
   echo
 done

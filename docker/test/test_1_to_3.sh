@@ -71,17 +71,19 @@ EOF
         )")
 
     status=$(echo "$payment_response" | jq -r '.result.status')
-    echo "status: '$status'"
+    if [ "$status" != "Success" ]; then
+        echo "status: '$status'"
+    fi
 
     if [ "$status" = "Success" ]; then
         elapsed=$(($(date +%s) - start_time))
-        echo "Channels is ready after ${elapsed} seconds"
+        echo "Payment SUCCESS in ${elapsed}s | payment_hash=${payment_hash}"
         break   # 成功就退出整个脚本
     fi
 
     elapsed=$(($(date +%s) - start_time))
     if [ "$elapsed" -ge "$timeout" ]; then
-        echo "Timeout: waiting for channel availability exceeded 10 minutes" >&2
+        echo "Timeout: payment not successful within ${timeout}s" >&2
         exit 1
     fi
 

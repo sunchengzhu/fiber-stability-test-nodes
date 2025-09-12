@@ -17,3 +17,19 @@ curl -sS 'http://172.30.0.1:8231' \
       }
     ]
   }' | jq -r "$jq_filter"
+
+curl -sS 'http://172.30.0.1:8231' \
+  -H 'Content-Type: application/json' \
+  -H "Authorization: Bearer $TOKEN" \
+  -d '{
+    "id": 1,
+    "jsonrpc": "2.0",
+    "method": "list_channels",
+    "params": [
+      {
+        "peer_id": "QmZPivdNrYkLowXCSTZtbba1kgqfgUWBsHo4AX3PoqJmnL"
+      }
+    ]
+  }' | jq -r "$jq_filter"
+
+echo ""
