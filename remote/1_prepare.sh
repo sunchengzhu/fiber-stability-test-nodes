@@ -5,7 +5,7 @@ cd ..
 rm -rf fiber && mkdir fiber && cd fiber
 
 if [ "$1" == "develop" ]; then
-  download_url="http://github-test-logs.ckbapp.dev/fiber/fnn_develop_20250804_1530-x86_64-linux-portable.tar.gz"
+  download_url="http://github-test-logs.ckbapp.dev/fiber/fnn_develop_20250912_1800-x86_64-linux-portable.tar.gz"
 elif [ "$1" == "mpp" ]; then
   download_url="http://github-test-logs.ckbapp.dev/fiber/fnn_mpp_20250729_1200-x86_64-linux-portable.tar.gz"
 elif [ "$1" == "find" ]; then
