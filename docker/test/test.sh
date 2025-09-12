@@ -13,8 +13,8 @@ SLEEP=1
 # 与脚本同目录的 open_channel.sh
 SCRIPT_DIR=$(dirname "$0")
 OPEN_CHANNEL_PATH="$SCRIPT_DIR/open_channel.sh"
-
 LIST_CHANNELS_PATH="$SCRIPT_DIR/list_channels.sh"
+SHUTDOWN_CHANNEL_PATH="$SCRIPT_DIR/shutdown_channel.sh"
 
 elapsed=0
 while true
@@ -68,6 +68,9 @@ done
 peer_id=$(printf "%s\n" "$addr" | sed -n 's#.*/p2p/\(.*\)$#\1#p')
 [ -n "$peer_id" ] || { echo "failed to extract peer_id from: $addr"; exit 1; }
 echo "$peer_id"
+
+# ==== 修改shutdown_channel.sh的peer_id ====
+sed -i "s|$PLACEHOLDER_PEER_ID|$peer_id|g" "$SHUTDOWN_CHANNEL_PATH"
 
 # ==== open_channel ====
 [ -r "$OPEN_CHANNEL_PATH" ] || { echo "cannot read $OPEN_CHANNEL_PATH"; exit 1; }

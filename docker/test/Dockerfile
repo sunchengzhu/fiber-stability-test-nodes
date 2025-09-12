@@ -9,4 +9,4 @@ WORKDIR /app
 COPY ./*.sh ./
 RUN chmod +x ./*.sh
 
-CMD ["./test.sh"]
+ENTRYPOINT ["/app/test.sh"]

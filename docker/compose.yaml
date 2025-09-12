@@ -9,8 +9,6 @@ services:
     volumes:
       - ./node1/config.yml:/app/config.yml:ro
       - ./node1/key:/app/node/ckb/key
-      - ./node1/test_1_to_2.sh:/app/test_1_to_2.sh
-      - ./node1/test_1_to_3.sh:/app/test_1_to_3.sh
     networks:
       fiber_net:
         ipv4_address: 172.30.0.1
