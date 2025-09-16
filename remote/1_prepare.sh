@@ -13,7 +13,7 @@ elif [ "$1" == "find" ]; then
 elif [ "$1" == "watchtower" ]; then
   download_url="http://github-test-logs.ckbapp.dev/fiber/fnn_watchtower_20250609_2123-x86_64-linux-portable.tar.gz"
 elif [ "$1" == "debug" ]; then
-  download_url="http://github-test-logs.ckbapp.dev/fiber/fnn_debug_20250916_2015-x86_64-linux-portable.tar.gz"
+  download_url="http://github-test-logs.ckbapp.dev/fiber/fnn_debug_20250916_2030-x86_64-linux-portable.tar.gz"
 elif [ -z "$1" ] || [ "$1" == "latest" ]; then
   download_url=$(curl -s https://api.github.com/repos/nervosnetwork/fiber/releases |
     jq -r '.[0].assets[] | select(.name | endswith("linux-portable.tar.gz")) | .browser_download_url')
