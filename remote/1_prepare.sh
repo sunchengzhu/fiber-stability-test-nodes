@@ -49,7 +49,7 @@ for ((id = $start_node_id; id <= $end_node_id; id++)); do
   fi
 
   # 根据 id 修改配置文件中的地址
-if [ "$id" -eq 0 ] || [ "$id" -eq 6 ] || [ "$id" -eq 7 ]; then
+if [ "$id" -eq 1 ] || [ "$id" -eq 6 ] || [ "$id" -eq 7 ]; then
     yq eval '.fiber.announce_private_addr = true' -i "testnet-fnn/node${id}/config.yml"
   fi
 
