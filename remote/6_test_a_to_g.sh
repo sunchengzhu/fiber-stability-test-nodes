@@ -1,6 +1,6 @@
 #!/bin/bash
 
-timeout=600
+timeout=300
 start_time=$(date +%s)
 
 while true; do
@@ -76,7 +76,7 @@ EOF
 
     elapsed=$(($(date +%s) - start_time))
     if [ "$elapsed" -ge "$timeout" ]; then
-        echo "超时：等待channel可用时间超过10分钟" >&2
+        echo "超时：等待channel可用时间超过5分钟" >&2
         exit 1
     fi
 
