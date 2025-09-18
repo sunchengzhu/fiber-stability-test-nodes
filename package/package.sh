@@ -5,9 +5,9 @@ DIR="/home/ckb/scz/fiber"
 TMP_DIR="/home/ckb/scz/tmp"
 PKG_DIR="$(cd "$(dirname "$0")" && pwd)"   # 当前脚本所在目录 (package)
 
-channel="${1:?usage: $0 <channel> [remote-branch] }"
+version="${1:?usage: $0 <channel> [remote-branch] }"
 
-if [ "$channel" = "debug" ]; then
+if [ "$version" = "debug" ]; then
   cd "$DEBUG_DIR" || exit 1
 else
   cd "$DIR" || exit 1
@@ -31,12 +31,12 @@ commit="$(echo "$ver_out" | sed -n 's/.*(\([0-9a-f]\{7,\}\) .*/\1/p')"
 date_iso="$(echo "$ver_out" | sed -n 's/.*(.* \([0-9-]\{10\}\)).*/\1/p')"
 date_compact="${date_iso//-/}"
 
-pkg="fnn_${channel}_${date_compact}_${commit}-x86_64-linux-portable.tar.gz"
+pkg="fnn_${version}_${date_compact}_${commit}-x86_64-linux-portable.tar.gz"
 
 tar czvf "$pkg" fnn fnn-migrate config
 python3 upload.py "$pkg"
 
-CONF="$PKG_DIR/fnn.conf" bash "$PKG_DIR/fnn.sh" set "$channel" "$commit" "$date_compact"
+CONF="$PKG_DIR/fnn.conf" bash "$PKG_DIR/fnn.sh" set "$version" "$commit" "$date_compact"
 python3 "$TMP_DIR/upload.py" "$PKG_DIR/fnn.conf"
 
 echo "Done: $pkg"
