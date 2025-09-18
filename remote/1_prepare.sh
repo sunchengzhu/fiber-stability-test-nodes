@@ -13,7 +13,7 @@ elif [[ "$1" =~ ^v?[0-9] ]]; then
   download_url="https://github.com/nervosnetwork/fiber/releases/download/v${fiber_version}/fnn_v${fiber_version}-x86_64-linux-portable.tar.gz"
 else
   wget -q -O "$SCRIPT_DIR/../package/fnn.conf" "http://github-test-logs.ckbapp.dev/fiber/fnn.conf"
-  download_url="$(CONF="$SCRIPT_DIR/../package/fnn.conf" "$SCRIPT_DIR/../package/fnn.sh" url "$1")"
+  download_url="$(CONF="$SCRIPT_DIR/../package/fnn.conf" bash "$SCRIPT_DIR/../package/fnn.sh" url "$1")"
 fi
 
 wget -q "$download_url"
