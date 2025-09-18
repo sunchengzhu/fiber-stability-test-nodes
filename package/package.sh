@@ -36,7 +36,7 @@ pkg="fnn_${channel}_${date_compact}_${commit}-x86_64-linux-portable.tar.gz"
 tar czvf "$pkg" fnn fnn-migrate config
 python3 upload.py "$pkg"
 
-bash "$PKG_DIR/fnn.sh" set "$channel" "$commit" "$date_compact"
+CONF="$PKG_DIR/fnn.conf" bash "$PKG_DIR/fnn.sh" set "$channel" "$commit" "$date_compact"
 python3 "$TMP_DIR/upload.py" "$PKG_DIR/fnn.conf"
 
 echo "Done: $pkg"
