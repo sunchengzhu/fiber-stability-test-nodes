@@ -17,3 +17,5 @@ gradle
 /gradlew.bat
 
 docker/fnn
+
+package/fnn.conf

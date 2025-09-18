@@ -3,26 +3,21 @@
 pkill fnn
 cd ..
 rm -rf fiber && mkdir fiber && cd fiber
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
-if [ "$1" == "develop" ]; then
-  download_url="http://github-test-logs.ckbapp.dev/fiber/fnn_develop_20250917_1345-x86_64-linux-portable.tar.gz"
-elif [ "$1" == "mpp" ]; then
-  download_url="http://github-test-logs.ckbapp.dev/fiber/fnn_mpp_20250729_1200-x86_64-linux-portable.tar.gz"
-elif [ "$1" == "find" ]; then
-  download_url="http://github-test-logs.ckbapp.dev/fiber/fnn_tunning-find-path_20250506_1937-x86_64-linux-portable.tar.gz"
-elif [ "$1" == "watchtower" ]; then
-  download_url="http://github-test-logs.ckbapp.dev/fiber/fnn_watchtower_20250609_2123-x86_64-linux-portable.tar.gz"
-elif [ "$1" == "debug" ]; then
-  download_url="http://github-test-logs.ckbapp.dev/fiber/fnn_debug_20250917_2130-x86_64-linux-portable.tar.gz"
-elif [ -z "$1" ] || [ "$1" == "latest" ]; then
-  download_url=$(curl -s https://api.github.com/repos/nervosnetwork/fiber/releases |
-    jq -r '.[0].assets[] | select(.name | endswith("linux-portable.tar.gz")) | .browser_download_url')
-else
-  fiber_version="$1"
+if [ -z "$1" ] || [ "$1" == "latest" ]; then
+  download_url=$(curl -s https://api.github.com/repos/nervosnetwork/fiber/releases \
+    | jq -r '.[0].assets[] | select(.name | endswith("linux-portable.tar.gz")) | .browser_download_url')
+elif [[ "$1" =~ ^v?[0-9] ]]; then
+  fiber_version="${1#v}"
   download_url="https://github.com/nervosnetwork/fiber/releases/download/v${fiber_version}/fnn_v${fiber_version}-x86_64-linux-portable.tar.gz"
+else
+  wget -q -O "$SCRIPT_DIR/../package/fnn.conf" "http://github-test-logs.ckbapp.dev/fiber/fnn.conf"
+  download_url="$(CONF="$SCRIPT_DIR/../package/fnn.conf" "$SCRIPT_DIR/../package/fnn.sh" url "$1")"
 fi
+
 wget -q "$download_url"
-tar xzvf fnn_*-linux-portable.tar.gz
+tar xzf fnn_*-linux-portable.tar.gz
 
 # 节点范围定义
 start_node_id=1
