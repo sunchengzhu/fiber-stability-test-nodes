@@ -72,7 +72,7 @@ EOF
 
         status=$(echo "$payment_response" | jq -r '.result.status')
         if [ "$status" != "Success" ]; then
-            echo "status: '$status'"
+            echo "status: '$status' payment_hash=${payment_hash}"
         fi
 
         if [ "$status" = "Success" ]; then
