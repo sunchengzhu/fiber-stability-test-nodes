@@ -16,6 +16,7 @@ else
   download_url="$(CONF="$SCRIPT_DIR/../package/fnn.conf" bash "$SCRIPT_DIR/../package/fnn.sh" url "$1")"
 fi
 
+echo "$download_url"
 wget -q "$download_url"
 tar xzf fnn_*-linux-portable.tar.gz
 
