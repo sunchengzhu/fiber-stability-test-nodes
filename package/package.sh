@@ -51,13 +51,32 @@ elif [ -n "$commit_sha" ]; then
   git checkout --detach -f "$commit_sha"
 
 elif [ -n "$fiber_branch" ]; then
-  echo "[package] 仅指定分支: origin/$fiber_branch"
-  git fetch origin "$fiber_branch" || true
-  git reset --hard "origin/$fiber_branch"
+  echo "[package] 仅指定分支: origin/${fiber_branch}"
+
+  # 强制刷新远端追踪分支，保证本地拿到的是远端最新（即便远端 rebase/force-push）
+  if git rev-parse --is-shallow-repository >/dev/null 2>&1 && \
+     [ "$(git rev-parse --is-shallow-repository)" = "true" ]; then
+    git fetch --prune --depth=1 origin \
+      "+refs/heads/${fiber_branch}:refs/remotes/origin/${fiber_branch}"
+  else
+    git fetch --prune origin \
+      "+refs/heads/${fiber_branch}:refs/remotes/origin/${fiber_branch}"
+  fi
+
+  git reset --hard "origin/${fiber_branch}"
 
 else
   echo "[package] 未指定 commit/branch，默认对齐 origin/develop"
-  git fetch origin develop || true
+
+  if git rev-parse --is-shallow-repository >/dev/null 2>&1 && \
+     [ "$(git rev-parse --is-shallow-repository)" = "true" ]; then
+    git fetch --prune --depth=1 origin \
+      "+refs/heads/develop:refs/remotes/origin/develop"
+  else
+    git fetch --prune origin \
+      "+refs/heads/develop:refs/remotes/origin/develop"
+  fi
+
   git reset --hard origin/develop
 fi
 
