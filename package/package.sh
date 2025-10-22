@@ -2,6 +2,7 @@
 set -euo pipefail
 
 DEBUG_DIR="/home/ckb/scz/yukang/fiber"
+QUAKE_DIR="home/ckb/scz/quake/fiber"
 DIR="/home/ckb/scz/fiber"
 TMP_DIR="/home/ckb/scz/tmp"
 PKG_DIR="$(cd "$(dirname "$0")" && pwd)"   # 当前脚本所在目录 (package)
@@ -16,6 +17,8 @@ echo "[package] params: version=$version branch=${fiber_branch:-<none>} commit=$
 # 1) 进入源码目录
 if [ "$version" = "debug" ]; then
   cd "$DEBUG_DIR"
+elif [ "$version" = "quake" ]; then
+  cd "$QUAKE_DIR"
 else
   cd "$DIR"
 fi
