@@ -82,7 +82,7 @@ shutdown_channel_json_template='{
         "hash_type": "type",
         "args": "%s"
       },
-      "fee_rate": "0x3FC"
+      "fee_rate": "0x186a0"
     }
   ]
 }'
