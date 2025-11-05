@@ -123,7 +123,7 @@ open_channel_f_json_data=$(
       "peer_id": "$f_peer_id",
       "funding_amount": "0x174876e800",
       "public": true,
-      "funding_fee_rate": "0x2710"
+      "funding_fee_rate": "0x186a0"
     }
   ]
 }
@@ -141,7 +141,7 @@ open_channel_g_json_data=$(
       "peer_id": "$g_peer_id",
       "funding_amount": "0x1bf08eb000",
       "public": true,
-      "funding_fee_rate": "0x2710"
+      "funding_fee_rate": "0x186a0"
     }
   ]
 }
