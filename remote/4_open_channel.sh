@@ -18,7 +18,7 @@ check_channels_ready() {
   local peer_id=$2
   local local_ip=$3
   local start_time=$(date +%s)
-  local timeout=180
+  local timeout=240
 
   while true; do
     # 直接在 curl 请求中构造 JSON 数据
@@ -63,7 +63,7 @@ check_channels_ready() {
 
     # 超过时间限制则退出
     if [[ "$elapsed_time" -ge "$timeout" ]]; then
-      echo "超时：180秒内未所有通道都准备就绪。"
+      echo "超时：240秒内未所有通道都准备就绪。"
       exit 1
     fi
 
