@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 set +e
 if systemctl status fnn.service >/dev/null 2>&1; then
