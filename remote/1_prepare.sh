@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if systemctl list-unit-files | grep -q '^fnn.service'; then
+if systemctl status fnn.service >/dev/null 2>&1; then
   echo "[prepare] stopping fnn.service via systemctl..."
   sudo systemctl stop fnn.service || true
   sudo systemctl reset-failed fnn.service || true
