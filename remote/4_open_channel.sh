@@ -17,57 +17,61 @@ check_channels_ready() {
   local port=$1
   local peer_id=$2
   local local_ip=$3
+  local expected_count=$4   # 新增参数：期望通道数
   local start_time=$(date +%s)
   local timeout=240
 
   while true; do
-    # 直接在 curl 请求中构造 JSON 数据
-    local states=$(curl -sS --location "http://$local_ip:$port" \
-      --header "Content-Type: application/json" \
-      -d "{
-        \"id\": \"1\",
-        \"jsonrpc\": \"2.0\",
-        \"method\": \"list_channels\",
-        \"params\": [{
-          \"peer_id\": \"$peer_id\"
-        }]
-      }" | jq -r '.result.channels[].state.state_name')
+    local response=$(
+      curl -sS --location "http://$local_ip:$port" \
+        --header "Content-Type: application/json" \
+        -d "{
+          \"id\": \"1\",
+          \"jsonrpc\": \"2.0\",
+          \"method\": \"list_channels\",
+          \"params\": [{
+            \"peer_id\": \"$peer_id\"
+          }]
+        }"
+    )
 
-    # 如果 states 为空，则继续等待
-    if [[ -z "$states" ]]; then
+    local states=$(echo "$response" | jq -r '.result.channels[].state.state_name')
+    local count=$(echo "$response" | jq '.result.channels | length')
+
+    if [[ -z "$states" || "$count" -eq 0 ]]; then
       echo "Port $port states is empty, retrying..."
     else
-      echo "Port $port states: $states"
+      echo "Port $port channel count: $count, states: $states"
 
-      # 检查是否所有状态都为 CHANNEL_READY
-      local all_ready=true
-      for state in $states; do
-        if [[ "$state" != "CHANNEL_READY" ]]; then
-          all_ready=false
-          break
+      # 数量不够，继续等
+      if (( count < expected_count )); then
+        echo "Port $port 当前只有 $count/$expected_count 个通道，继续等待..."
+      else
+        local all_ready=true
+        for state in $states; do
+          if [[ "$state" != "CHANNEL_READY" ]]; then
+            all_ready=false
+            break
+          fi
+        done
+
+        if [[ "$all_ready" == "true" ]]; then
+          local current_time=$(date +%s)
+          local elapsed_time=$((current_time - start_time))
+          echo "所有 $count 个通道都已准备就绪，总耗时：${elapsed_time}秒。"
+          return
         fi
-      done
-
-      # 如果所有状态都为 CHANNEL_READY，则退出
-      if [[ "$all_ready" == "true" ]]; then
-        local current_time=$(date +%s)
-        local elapsed_time=$((current_time - start_time))
-        echo "所有通道都已准备就绪，总耗时：${elapsed_time}秒。"
-        return
       fi
     fi
 
-    # 计算已经过的时间
     local current_time=$(date +%s)
     local elapsed_time=$((current_time - start_time))
 
-    # 超过时间限制则退出
     if [[ "$elapsed_time" -ge "$timeout" ]]; then
-      echo "超时：240秒内未所有通道都准备就绪。"
+      echo "超时：240秒内未完成 $expected_count 个通道的准备。"
       exit 1
     fi
 
-    # 等待5秒再次检查
     sleep 5
   done
 }
@@ -156,6 +160,20 @@ if [ "$current_ip" == "18.167.71.41" ]; then
   # for i in {0..4}; do
   for i in 0; do
     port="${PORTS[i]}"
+
+    # 先记录当前已有的通道数
+    local_ip="172.31.23.160"
+    before_count=$(curl -sS --location "http://$local_ip:$port" \
+      --header "Content-Type: application/json" \
+      -d "{
+        \"id\": \"1\",
+        \"jsonrpc\": \"2.0\",
+        \"method\": \"list_channels\",
+        \"params\": [{
+          \"peer_id\": \"$f_peer_id\"
+        }]
+      }" | jq '.result.channels | length')
+
     # 默认执行 1 次，只有 i 为 0 时执行 OPEN_CHANNEL_COUNT 次
     repeat_count=1
     if [ "$i" -eq 0 ]; then
@@ -163,11 +181,20 @@ if [ "$current_ip" == "18.167.71.41" ]; then
     fi
 
     json_data=$(printf "$open_channel_f_json_data" "$port")
+
+    echo "准备在 port $port 上打开 $repeat_count 个通道（当前已有 $before_count 个）"
+
+    # 先把所有 open_channel 请求发出去
     for ((j = 1; j <= repeat_count; j++)); do
-      curl -sS --location "http://172.31.23.160:$port" --header "Content-Type: application/json" --data "$json_data"
+      curl -sS --location "http://$local_ip:$port" \
+        --header "Content-Type: application/json" \
+        --data "$json_data"
       echo ""
-      check_channels_ready "$port" "$f_peer_id" "172.31.23.160"
     done
+
+    # 然后等通道数达到 before_count + repeat_count 且全部 READY
+    expected_total=$((before_count + repeat_count))
+    check_channels_ready "$port" "$f_peer_id" "$local_ip" "$expected_total"
   done
   # for i in {0..4}; do
   #   port="${PORTS[i]}"
