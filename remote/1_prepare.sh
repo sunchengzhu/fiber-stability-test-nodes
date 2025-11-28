@@ -1,13 +1,15 @@
 #!/bin/bash
 
+set +e
 if systemctl status fnn.service >/dev/null 2>&1; then
   echo "[prepare] stopping fnn.service via systemctl..."
-  sudo systemctl stop fnn.service || true
-  sudo systemctl reset-failed fnn.service || true
+  sudo systemctl stop fnn.service
+  sudo systemctl reset-failed fnn.service
 else
   echo "[prepare] fnn.service not found, fallback to pkill fnn"
-  pkill fnn || true
+  pkill fnn
 fi
+set -e
 
 cd ..
 rm -rf fiber && mkdir fiber && cd fiber
