@@ -9,8 +9,8 @@ IP=$(curl -s ifconfig.me)
 case "$IP" in
 "18.167.71.41")
   # 删除除 node1 到 node5 以外的节点 (即删除 node6, node7, node8)
-#  rm -rf ../fiber/testnet-fnn/node{6..8}
-   rm -rf ../fiber/testnet-fnn/node{2..8}
+  #  rm -rf ../fiber/testnet-fnn/node{6..8}
+  rm -rf ../fiber/testnet-fnn/node{2..8}
   ;;
 "43.198.254.225")
   # 删除除 node6 外的节点 (即删除 node1 到 node5 和 node7 到 node8)
@@ -18,7 +18,7 @@ case "$IP" in
   ;;
 "43.199.108.57")
   # 删除除 node7 和 node8 外的节点 (即删除 node1 到 node6)
-#  rm -rf ../fiber/testnet-fnn/node{1..6}
+  #  rm -rf ../fiber/testnet-fnn/node{1..6}
   rm -rf ../fiber/testnet-fnn/node{1..6} ../fiber/testnet-fnn/node8
   ;;
 *)
@@ -29,14 +29,28 @@ esac
 ls ../fiber/testnet-fnn
 
 cd ../fiber
+
+# 用数组记录每个 fnn 的 PID
+pids=()
+
 for dir in $(ls -d ./testnet-fnn/node*); do
   node_id=$(basename "$dir")
   chmod +x fnn
-#  RUST_LOG=info,fnn=debug ./fnn -c "$dir/config.yml" -d "$dir" >"./testnet-fnn/$node_id/$node_id.log" 2>&1 &
-  FIBER_SECRET_KEY_PASSWORD='123' RUST_LOG=info,fnn=debug ./fnn -c "$dir/config.yml" -d "$dir" >"./testnet-fnn/$node_id/$node_id.log" 2>&1 &
+
+  FIBER_SECRET_KEY_PASSWORD='123' RUST_LOG=info,fnn=debug \
+    ./fnn -c "$dir/config.yml" -d "$dir" >"./testnet-fnn/$node_id/$node_id.log" 2>&1 &
+
+  pids+=($!)   # 记录刚才这个 fnn 的 PID
+
   sleep 3
   ./fnn --version
   head -n 1 "./testnet-fnn/$node_id/$node_id.log"
 done
 
 ps aux | grep '[f]nn'
+
+# 关键：等所有 fnn 退出之前，这个脚本不会退出
+# 这样 systemd 就会一直认为服务是 active(running)
+if ((${#pids[@]} > 0)); then
+  wait "${pids[@]}"
+fi
