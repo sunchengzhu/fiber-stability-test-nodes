@@ -2,29 +2,28 @@
 
 # 判断是否传入参数，否则默认次数为1
 if [ -z "$1" ]; then
-  OPEN_CHANNEL_COUNT=1
+	OPEN_CHANNEL_COUNT=1
 else
-  OPEN_CHANNEL_COUNT=$1
+	OPEN_CHANNEL_COUNT=$1
 fi
 
-# 参数校验：必须为正整数
 if ! [[ "$OPEN_CHANNEL_COUNT" =~ ^[1-9][0-9]*$ ]]; then
-  echo "Error: open_channel_count 必须为正整数。"
-  usage
+	echo "Error: open_channel_count 必须为正整数。"
+	usage
 fi
 
 check_channels_ready() {
-  local port=$1
-  local peer_id=$2
-  local local_ip=$3
-  local start_time=$(date +%s)
-  local timeout=240
+	local port=$1
+	local peer_id=$2
+	local local_ip=$3
+	local start_time=$(date +%s)
+	local timeout=240
 
-  while true; do
-    # 直接在 curl 请求中构造 JSON 数据
-    local states=$(curl -sS --location "http://$local_ip:$port" \
-      --header "Content-Type: application/json" \
-      -d "{
+	while true; do
+		# 直接在 curl 请求中构造 JSON 数据
+		local states=$(curl -sS --location "http://$local_ip:$port" \
+			--header "Content-Type: application/json" \
+			-d "{
         \"id\": \"1\",
         \"jsonrpc\": \"2.0\",
         \"method\": \"list_channels\",
@@ -33,69 +32,69 @@ check_channels_ready() {
         }]
       }" | jq -r '.result.channels[].state.state_name')
 
-    # 如果 states 为空，则继续等待
-    if [[ -z "$states" ]]; then
-      echo "Port $port states is empty, retrying..."
-    else
-      echo "Port $port states: $states"
+		# 如果 states 为空，则继续等待
+		if [[ -z "$states" ]]; then
+			echo "Port $port states is empty, retrying..."
+		else
+			echo "Port $port states: $states"
 
-      # 检查是否所有状态都为 CHANNEL_READY
-      local all_ready=true
-      for state in $states; do
-        if [[ "$state" != "CHANNEL_READY" ]]; then
-          all_ready=false
-          break
-        fi
-      done
+			# 检查是否所有状态都为 CHANNEL_READY
+			local all_ready=true
+			for state in $states; do
+				if [[ "$state" != "CHANNEL_READY" ]]; then
+					all_ready=false
+					break
+				fi
+			done
 
-      # 如果所有状态都为 CHANNEL_READY，则退出
-      if [[ "$all_ready" == "true" ]]; then
-        local current_time=$(date +%s)
-        local elapsed_time=$((current_time - start_time))
-        echo "所有通道都已准备就绪，总耗时：${elapsed_time}秒。"
-        return
-      fi
-    fi
+			# 如果所有状态都为 CHANNEL_READY，则退出
+			if [[ "$all_ready" == "true" ]]; then
+				local current_time=$(date +%s)
+				local elapsed_time=$((current_time - start_time))
+				echo "所有通道都已准备就绪，总耗时：${elapsed_time}秒。"
+				return
+			fi
+		fi
 
-    # 计算已经过的时间
-    local current_time=$(date +%s)
-    local elapsed_time=$((current_time - start_time))
+		# 计算已经过的时间
+		local current_time=$(date +%s)
+		local elapsed_time=$((current_time - start_time))
 
-    # 超过时间限制则退出
-    if [[ "$elapsed_time" -ge "$timeout" ]]; then
-      echo "超时：240秒内未所有通道都准备就绪。"
-      exit 1
-    fi
+		# 超过时间限制则退出
+		if [[ "$elapsed_time" -ge "$timeout" ]]; then
+			echo "超时：240秒内未所有通道都准备就绪。"
+			exit 1
+		fi
 
-    # 等待5秒再次检查
-    sleep 5
-  done
+		# 等待5秒再次检查
+		sleep 5
+	done
 }
 
 get_peer_id() {
-  local ip="$1"
-  local port="$2"
+	local ip="$1"
+	local port="$2"
 
-  # 调 node_info
-  local resp
-  resp=$(curl -s "http://$ip:$port" \
-    -H "Content-Type: application/json" \
-    -d '{
+	# 调 node_info
+	local resp
+	resp=$(curl -s "http://$ip:$port" \
+		-H "Content-Type: application/json" \
+		-d '{
       "id": 1,
       "jsonrpc": "2.0",
       "method": "node_info",
       "params": []
     }')
 
-  # 如果 resp 为空，或含有 .error，都视为失败
-  if [[ -z "$resp" ]] || echo "$resp" | jq -e '.error' >/dev/null 2>&1; then
-    echo "Query to $ip:$port failed."
-    echo ""    # 返回空字符串给 caller
-    return
-  fi
+	# 如果 resp 为空，或含有 .error，都视为失败
+	if [[ -z "$resp" ]] || echo "$resp" | jq -e '.error' >/dev/null 2>&1; then
+		echo "Query to $ip:$port failed."
+		echo "" # 返回空字符串给 caller
+		return
+	fi
 
-  # 正常解析 peer_id
-  echo "$resp" | jq -r '.result.addresses[0]' | awk -F'/' '{print $NF}'
+	# 正常解析 peer_id
+	echo "$resp" | jq -r '.result.addresses[0]' | awk -F'/' '{print $NF}'
 }
 
 f_peer_id=$(get_peer_id "43.198.254.225" 8236)
@@ -105,7 +104,7 @@ echo "f_peer_id = $f_peer_id"
 echo "g_peer_id = $g_peer_id"
 
 open_channel_f_json_data=$(
-  cat <<EOF
+	cat <<EOF
 {
   "id": "%s",
   "jsonrpc": "2.0",
@@ -123,7 +122,7 @@ EOF
 )
 
 open_channel_g_json_data=$(
-  cat <<EOF
+	cat <<EOF
 {
   "id": "%s",
   "jsonrpc": "2.0",
@@ -145,17 +144,19 @@ TZ=Asia/Shanghai date "+%Y-%m-%d %H:%M:%S"
 current_ip=$(curl -s ifconfig.me)
 
 if [ "$current_ip" == "18.167.71.41" ]; then
-    json_data=$(printf "$open_channel_f_json_data" "$port")
-    for ((ip = 1; i <= $OPEN_CHANNEL_COUNT; i++)); do
-      curl -sS --location "http://172.31.23.160:8231" --header "Content-Type: application/json" --data "$json_data"
-      echo ""
-      check_channels_ready "$port" "$f_peer_id" "172.31.23.160"
-    done
+	port=8231
+	json_data=$(printf "$open_channel_f_json_data" "$port")
+	for ((ip = 1; i <= $OPEN_CHANNEL_COUNT; i++)); do
+		curl -sS --location "http://172.31.23.160:$port" --header "Content-Type: application/json" --data "$json_data"
+		echo ""
+		check_channels_ready "$port" "$f_peer_id" "172.31.23.160"
+	done
 elif [ "$current_ip" == "43.198.254.225" ]; then
-  json_data=$(printf "$open_channel_g_json_data" "$port")
-  for ((j = 1; j <= OPEN_CHANNEL_COUNT; j++)); do
-    curl -sS --location "http://172.31.28.209:8236" --header "Content-Type: application/json" --data "$json_data"
-    echo ""
-    check_channels_ready "$port" "$g_peer_id" "172.31.28.209"
-  done
+	port=8236
+	json_data=$(printf "$open_channel_g_json_data" "$port")
+	for ((j = 1; j <= OPEN_CHANNEL_COUNT; j++)); do
+		curl -sS --location "http://172.31.28.209:$port" --header "Content-Type: application/json" --data "$json_data"
+		echo ""
+		check_channels_ready "$port" "$g_peer_id" "172.31.28.209"
+	done
 fi
