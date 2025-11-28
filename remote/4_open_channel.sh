@@ -106,7 +106,7 @@ echo "g_peer_id = $g_peer_id"
 open_channel_f_json_data=$(
 	cat <<EOF
 {
-  "id": "%s",
+  "id": "16",
   "jsonrpc": "2.0",
   "method": "open_channel",
   "params": [
@@ -124,7 +124,7 @@ EOF
 open_channel_g_json_data=$(
 	cat <<EOF
 {
-  "id": "%s",
+  "id": "67",
   "jsonrpc": "2.0",
   "method": "open_channel",
   "params": [
@@ -139,23 +139,19 @@ open_channel_g_json_data=$(
 EOF
 )
 
-TZ=Asia/Shanghai date "+%Y-%m-%d %H:%M:%S"
-
 current_ip=$(curl -s ifconfig.me)
 
 if [ "$current_ip" == "18.167.71.41" ]; then
 	port=8231
-	json_data=$(printf "$open_channel_f_json_data" "$port")
-	for ((ip = 1; i <= $OPEN_CHANNEL_COUNT; i++)); do
-		curl -sS --location "http://172.31.23.160:$port" --header "Content-Type: application/json" --data "$json_data"
+	for ((i = 1; i <= OPEN_CHANNEL_COUNT; i++)); do
+		curl -sS --location "http://172.31.23.160:$port" --header "Content-Type: application/json" --data "$open_channel_f_json_data"
 		echo ""
 		check_channels_ready "$port" "$f_peer_id" "172.31.23.160"
 	done
 elif [ "$current_ip" == "43.198.254.225" ]; then
 	port=8236
-	json_data=$(printf "$open_channel_g_json_data" "$port")
-	for ((j = 1; j <= OPEN_CHANNEL_COUNT; j++)); do
-		curl -sS --location "http://172.31.28.209:$port" --header "Content-Type: application/json" --data "$json_data"
+	for ((i = 1; i <= OPEN_CHANNEL_COUNT; i++)); do
+		curl -sS --location "http://172.31.28.209:$port" --header "Content-Type: application/json" --data "$open_channel_g_json_data"
 		echo ""
 		check_channels_ready "$port" "$g_peer_id" "172.31.28.209"
 	done
