@@ -1,0 +1,14 @@
+[Unit]
+Description=FN Node Service
+After=network.target
+
+[Service]
+Type=simple
+User=ckb
+WorkingDirectory=/home/ckb/scz/fiber-stability-test-nodes/remote
+ExecStart=/bin/bash /home/ckb/scz/fiber-stability-test-nodes/remote/2_run.sh
+TimeoutStartSec=300
+KillMode=process
+
+[Install]
+WantedBy=multi-user.target
