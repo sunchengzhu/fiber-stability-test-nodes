@@ -1,6 +1,14 @@
 #!/bin/bash
 
-pkill fnn
+if systemctl list-unit-files | grep -q '^fnn.service'; then
+  echo "[prepare] stopping fnn.service via systemctl..."
+  sudo systemctl stop fnn.service || true
+  sudo systemctl reset-failed fnn.service || true
+else
+  echo "[prepare] fnn.service not found, fallback to pkill fnn"
+  pkill fnn || true
+fi
+
 cd ..
 rm -rf fiber && mkdir fiber && cd fiber
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
