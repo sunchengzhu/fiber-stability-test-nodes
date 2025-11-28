@@ -45,7 +45,7 @@ EOF
 EOF
         )" | jq -r '.result.payment_hash')
 
-    echo "payment_hash: $payment_hash"
+    echo "$(TZ='Asia/Shanghai' date "+%Y-%m-%d %H:%M:%S") payment_hash: $payment_hash"
     sleep 3
 
     payment_response=$(curl -sS --location 'http://172.31.23.160:8231' \
