@@ -8,7 +8,9 @@ User=ckb
 WorkingDirectory=/home/ckb/scz/fiber-stability-test-nodes/remote
 ExecStart=/bin/bash /home/ckb/scz/fiber-stability-test-nodes/remote/2_run.sh
 TimeoutStartSec=300
-KillMode=process
+KillMode=control-group
+Restart=on-failure
+RestartSec=5
 
 [Install]
 WantedBy=multi-user.target
