@@ -17,6 +17,7 @@ SCRIPT_DIR=$(dirname "$0")
 OPEN_CHANNEL_PATH="$SCRIPT_DIR/open_channel.sh"
 OPEN_CHANNEL_PATH_13="$SCRIPT_DIR/13_open_channel.sh"
 LIST_CHANNELS_PATH="$SCRIPT_DIR/list_channels.sh"
+LIST_CHANNELS_CURRENT="/app/list_channels_current.sh"
 SHUTDOWN_CHANNEL_PATH="$SCRIPT_DIR/shutdown_channel.sh"
 
 elapsed=0
@@ -135,9 +136,13 @@ while true; do
   if [ -z "${LIST_CHANNELS_PATH:-}" ]; then
     echo "$current_time LIST_CHANNELS_PATH is empty"
   else
-    output=$(sed -e "s|$PLACEHOLDER_PEER_ID|$peer_id_node2|g" \
-                 -e "s|$PLACEHOLDER_PEER_ID_NODE3|$peer_id_node3|g" \
-                 "$LIST_CHANNELS_PATH" | sh)
+    sed -e "s|$PLACEHOLDER_PEER_ID|$peer_id_node2|g" \
+        -e "s|$PLACEHOLDER_PEER_ID_NODE3|$peer_id_node3|g" \
+        "$LIST_CHANNELS_PATH" > "$LIST_CHANNELS_CURRENT"
+
+    chmod +x "$LIST_CHANNELS_CURRENT"
+
+    output=$(sh "$LIST_CHANNELS_CURRENT")
 
     if [ -z "$output" ]; then
       echo "$current_time list_channels output is empty"
