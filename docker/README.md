@@ -1,6 +1,6 @@
 # 操作步骤
 
-### 三个fiber节点的地址和私钥
+## 三个fiber节点的地址和私钥
 
 ```bash
 exhibit cruise private verify sister guess glass square write cash nurse auction
@@ -61,11 +61,73 @@ test容器会执行test.sh，做如下几件事：
 2. 改了13_open_channel.sh和的shutdown_channel.sh配置，方便后续手动执行脚本
 3. 每10s打印一次node1和node2、node1和node3之间的channel的余额
 
-删容器之前记得shutdown
+进入test容器执行`/app/test_1_to_2.sh`，即可测试转账，写了while true ，会一直转。
+
+## 记得回收CKB
+可以直接执行脚本
 
 ```bash
 docker exec -it test /app/shutdown_channel.sh
 ```
 
+调试命令
+
+channel_id可以在test容器的日志中找到
+
+```bash
+TOKEN='EpECCqYBCgVwZWVycwoIcGF5bWVudHMKCGNoYW5uZWxzCghpbnZvaWNlcxgDIgkKBwgAEgMYgAgiCQoHCAESAxiACCIJCgcIARIDGIEIIgkKBwgAEgMYgQgiCQoHCAESAxiCCCIJCgcIABIDGIIIIggKBggAEgIYGCIJCgcIARIDGIMIMiYKJAoCCBsSBggFEgIIBRoWCgQKAggFCggKBiCAwODoBgoEGgIIAhIkCAASIC3KNA3sQcH7HueRbBDT-Kg9Lmu5LwcEy-OMKcCvtVqRGkCg8T6TWf9HIT5nOfBjB0gelDJMwpIjM9utyJQ9JI3m3L5Sll2AJIPNajGsBy0Ywmkx0Z5VFT3n1SlHuWMM_wMFIiIKIMnzUSJrPnRIaFZYVjxVJu64vI-Oi81uftHSZWcuCZUQ'
+
+curl -sS 'http://172.30.0.1:8231' \
+  -H 'Content-Type: application/json' \
+  -H "Authorization: Bearer $TOKEN" \
+  -d '{
+    "id": 1,
+    "jsonrpc": "2.0",
+    "method": "shutdown_channel",
+    "params": [
+      {
+        "channel_id": "0xaac96d081210022b45d69ea1938794eae66d0b874f272c61ee5804c139040bce",
+        "close_script": {
+          "code_hash": "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8",
+          "hash_type": "type",
+          "args": "0xf74979fc88e37e61bf0d990a4a8bef3110d55c5e"
+        },
+        "fee_rate": "0x2710"
+      }
+    ]
+  }' | jq
+```
+
 可以在这看shutdown的状态：http://18.167.71.41:8130/
+
+**目前shutdown_channel会出现RPC ERROR**且节点自己没发起shutdown
+
+```yaml
+  2026-01-07T15:34:50.799239Z ERROR fnn::ckb::actor: [ckb] send transaction Byte32(0xfecd0e2e81e0c26f3b719b9c596e65f72ddeba5b4b854094fcf9a899c05101ca) failed: Rpc(Error { code: ServerError(-301), message: "TransactionFailedToResolve: Resolve failed Unknown(OutPoint(0x5a5288769cecde6451cb5d301416c297a6da43dc3ac2f3253542b4082478b19b00000000))", data: Some(String("Resolve(Unknown(OutPoint(0x5a5288769cecde6451cb5d301416c297a6da43dc3ac2f3253542b4082478b19b00000000)))")) })
+
+    at crates/fiber-lib/src/ckb/actor.rs:183
+
+    in ractor::actor::Actor with id: "0.23"
+
+
+  2026-01-07T15:34:50.799354Z ERROR fnn::fiber::in_flight_ckb_tx_actor: failed to send tx Hash256(0xfecd0e2e81e0c26f3b719b9c596e65f72ddeba5b4b854094fcf9a899c05101ca) because of rpc error: jsonrpc error: `Server error: TransactionFailedToResolve: Resolve failed Unknown(OutPoint(0x5a5288769cecde6451cb5d301416c297a6da43dc3ac2f3253542b4082478b19b00000000))`
+
+    at crates/fiber-lib/src/fiber/in_flight_ckb_tx_actor.rs:226
+
+    in ractor::actor::Actor with id: "0.23"
+
+
+  2026-01-07T15:35:19.265161Z ERROR fnn::fiber::in_flight_ckb_tx_actor: Closing transaction Hash256(0xfecd0e2e81e0c26f3b719b9c596e65f72ddeba5b4b854094fcf9a899c05101ca) failed to be confirmed with final status Rejected("{\"type\":\"Resolve\",\"description\":\"Resolve failed Unknown(OutPoint(0x5a5288769cecde6451cb5d301416c297a6da43dc3ac2f3253542b4082478b19b00000000))\"}")
+
+    at crates/fiber-lib/src/fiber/in_flight_ckb_tx_actor.rs:301
+
+    in ractor::actor::Actor with id: "0.23"
+
+
+  2026-01-07T15:35:19.265628Z ERROR fnn::fiber::network: Closing transaction failed for channel Byte32(0xfecd0e2e81e0c26f3b719b9c596e65f72ddeba5b4b854094fcf9a899c05101ca), tx hash: Hash256(0x7f049379809997c7a19bc44acb70b139e5e93aaf4c58dcea799fdbdf376489eb), peer id: PeerId(QmVih63mUcaaohw7T9pW152Dd89MdrV7MweywHA8FX2ov6)
+
+    at crates/fiber-lib/src/fiber/network.rs:923
+
+    in ractor::actor::Actor with id: "0.23"
+```
 
