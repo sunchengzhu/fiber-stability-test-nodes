@@ -1,8 +1,8 @@
 FROM debian:bookworm-slim
 
 ENV DEBIAN_FRONTEND=noninteractive TZ=Asia/Shanghai
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    bash curl jq tzdata openssl \
+RUN apt-get update && apt-get install -y --no-install-recommends --fix-missing \
+    bash curl jq tzdata openssl vim-tiny \
  && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
