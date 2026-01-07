@@ -28,11 +28,16 @@ docker buildx build --platform linux/arm64 -f Dockerfile -t fiber-fnn-builder:ar
 # 创建临时容器
 cid=$(docker create fiber-fnn-builder:arm64)
 # 拷贝到后续docker compose需要的目录下
-docker cp "$cid":/out/fnn ../../fnn
+docker cp "$cid":/out/fnn ../fnn
 # 删除临时容器
 docker rm "$cid"
 # 验证架构
 file ../../fnn
+# 验证版本
+docker run --rm --platform linux/arm64 \
+  -v "$PWD/../fnn:/fnn:ro" \
+  debian:bookworm-slim \
+  /fnn --version
 ```
 
 ## 运行docker compose

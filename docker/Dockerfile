@@ -12,4 +12,4 @@ ENV FIBER_SECRET_KEY_PASSWORD=123 \
     RUST_LOG=info \
     PATH="/app:${PATH}"
 
-CMD ["fnn", "-c", "/app/config.yml", "-d", "/app/node"]
+CMD ["/app/fnn", "-c", "/app/config.yml", "-d", "/app/node"]
