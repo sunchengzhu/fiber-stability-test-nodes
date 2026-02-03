@@ -1,4 +1,3 @@
-echo "f_peer_id = $f_peer_id"
 #!/bin/bash
 
 # 判断是否传入参数，否则默认次数为1
