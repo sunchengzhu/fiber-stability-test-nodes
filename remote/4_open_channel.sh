@@ -159,7 +159,7 @@ if [ "$current_ip" == "18.167.71.41" ]; then
  	for ((i = 1; i <= OPEN_CHANNEL_COUNT; i++)); do
  	 	curl -sS --location "http://172.31.23.160:$port" --header "Content-Type: application/json" --data "$open_channel_f_json_data"
  	 	echo ""
- 	 	sleep 60
+ 	 	sleep 30
  	done
  	check_channels_ready "$port" "$f_peer_id" "172.31.23.160" "$OPEN_CHANNEL_COUNT"
 elif [ "$current_ip" == "43.198.254.225" ]; then
@@ -167,7 +167,7 @@ elif [ "$current_ip" == "43.198.254.225" ]; then
  	for ((i = 1; i <= OPEN_CHANNEL_COUNT; i++)); do
  	 	curl -sS --location "http://172.31.28.209:$port" --header "Content-Type: application/json" --data "$open_channel_g_json_data"
  	 	echo ""
- 	 	sleep 60
+ 	 	sleep 30
  	done
  	check_channels_ready "$port" "$g_peer_id" "172.31.28.209" "$OPEN_CHANNEL_COUNT"
 fi
