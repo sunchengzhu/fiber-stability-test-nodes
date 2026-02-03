@@ -88,3 +88,7 @@ curl -s --location 'http://43.198.254.225:8236' --header 'Content-Type: applicat
 
 
 
+## Addresses
+
+Node1: ckt1qzda0cr08m85hc8jlnfp3zer7xulejywt49kt2rr0vthywaa50xwsqf5hnukanfv6appjv7nj8zykjhq6a8zzrczscmjz
+Node6: ckt1qzda0cr08m85hc8jlnfp3zer7xulejywt49kt2rr0vthywaa50xwsqv6sqf557wrf8luwndc2huk0huve305zac47lcdw
