@@ -97,8 +97,10 @@ if [ "$current_ip" == "18.167.71.41" ]; then
       --header "Content-Type: application/json" \
       --data "$json_data" | jq -r '.result.channels[].channel_id')
 
+
     if [[ -n "$channel_ids" ]]; then
-      args=$(sed -n "$((5 + 1))p" ../args.txt)
+    # 对于本机（第一次运行）始终使用 args.txt 的第1行
+    args=$(sed -n '1p' ../args.txt)
 
       for channel_id in $channel_ids; do
         if [[ "$channel_id" != "null" && -n "$channel_id" ]]; then
@@ -124,8 +126,8 @@ elif [ "$current_ip" == "43.198.254.225" ]; then
 
   # 检查是否有有效的channel IDs
   if [[ -n "$channel_ids" ]]; then
-    # 读取额外的参数
-    args=$(sed -n "$((5 + 1))p" ../args.txt)
+    # 对于远程第二台（第二次运行）使用 args.txt 的第6行
+    args=$(sed -n '6p' ../args.txt)
 
     # 为每个channel ID执行关闭操作
     for channel_id in $channel_ids; do
